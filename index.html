@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCT Division C&W — Circular Drafter</title>
 <style>
-  @media print {
+ @media print {
     .topbar, .tabs, .panel, .copy-bar, p { display: none !important; }
-    .preview-area { background: white !important; padding: 0 !important; }
-    .letterhead { box-shadow: none !important; border: none !important; width: 100% !important; }
+    .main { display: block !important; }
+    .preview-area { background: white !important; padding: 0 !important; max-height: none !important; }
+    .letterhead { box-shadow: none !important; border: none !important; width: 100% !important; min-height: auto !important; }
+    .lh-top { padding: 10px 20px !important; }
+    .lh-logo { width: 80px !important; height: 80px !important; }
+    .lh-body { padding: 16px 48px !important; }
+    @page { margin: 10mm; size: A4 portrait; }
   }
 * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f4f6f8; color: #222; }
