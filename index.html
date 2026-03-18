@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCT Division C&W — Circular Drafter</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @media print {
+    .topbar, .tabs, .panel, .copy-bar, p { display: none !important; }
+    .preview-area { background: white !important; padding: 0 !important; }
+    .letterhead { box-shadow: none !important; border: none !important; width: 100% !important; }
+  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f4f6f8; color: #222; }
   .topbar { background: #1a3a5c; color: white; padding: 12px 24px; }
   .topbar h1 { font-size: 16px; font-weight: 600; }
@@ -317,6 +322,7 @@
   <div class="preview-area">
     <div class="copy-bar" id="copyBar" style="display:none;">
       <button class="copy-text-btn" onclick="copyText()">Copy Text</button>
+      <button class="copy-text-btn" onclick="window.print()" style="margin-left:8px;background:#1a3a5c;color:white;border-color:#1a3a5c;">Download / Print</button>
     </div>
 
     <div class="letterhead">
