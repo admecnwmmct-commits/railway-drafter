@@ -327,7 +327,7 @@
   <div class="preview-area">
     <div class="copy-bar" id="copyBar" style="display:none;">
       <button class="copy-text-btn" onclick="copyText()">Copy Text</button>
-      <button class="copy-text-btn" onclick="window.print()" style="margin-left:8px;background:#1a3a5c;color:white;border-color:#1a3a5c;">Download / Print</button>
+      <button class="copy-text-btn" onclick="downloadDocx()" style="margin-left:8px;background:#1a3a5c;color:white;border-color:#1a3a5c;">Download as DOCX</button>
     </div>
 
     <div class="letterhead">
@@ -512,6 +512,29 @@ async function draftDocument() {
   }
   btn.disabled = false;
   btn.textContent = 'Draft Document';
+}
+async function downloadDocx() {
+  const res = await fetch('/download', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      file_no:      document.getElementById('fileNo').value,
+      date:         document.getElementById('effDate').value,
+      addressees:   document.getElementById('addressees').value,
+      subject:      document.getElementById('subject').value,
+      reference:    document.getElementById('reference').value,
+      body:         document.getElementById('bodytext').textContent,
+      signed_by:    document.getElementById('signedBy').value,
+      for_officer:  document.getElementById('forOfficer').value,
+      copy_to:      document.getElementById('copyTo').value
+    })
+  });
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'BCT_CW_Document.docx';
+  a.click();
 }
 </script>
 </body>
