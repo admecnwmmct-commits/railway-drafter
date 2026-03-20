@@ -58,7 +58,7 @@
 
   /* Letterhead */
   .letterhead { border: 1.5px solid #333; background: white; font-family: 'Times New Roman', serif; width: 210mm; min-height: 297mm; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  .lh-top { display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 10px 16px; }
+  .lh-top { display: flex; align-items: center; justify-content: space-between; padding: 20px 48px 10px 48px; }
   .lh-logo { width: 100px; height: 100px; object-fit: contain; }
   .lh-logo-box { width: 90px; height: 90px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; }
   .lh-center { text-align: center; flex: 1; padding: 0 10px; }
@@ -278,7 +278,8 @@
       </div>
       <div class="form-field">
         <label>Addressed To</label>
-        <input type="text" id="addressees" placeholder="e.g. All SSE/JE (C&W), BCT Division" />
+        <div id="addresseeList"></div>
+        <button type="button" onclick="addAddressee()" style="font-size:12px;margin-top:4px;padding:5px 12px;border:1px solid #1a3a5c;color:#1a3a5c;background:white;border-radius:5px;cursor:pointer;">+ Add Addressee</button>
       </div>
       <div class="form-field">
         <label>Subject</label>
@@ -417,6 +418,27 @@ function toggleBold(elId, btn) {
   btn.classList.toggle('active', boldStates[elId]);
 }
 
+function addAddressee(val) {
+  const list = document.getElementById('addresseeList');
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;';
+  row.innerHTML = `<input type="text" value="${val||''}" placeholder="e.g. All SSE (C&W), BCT" style="flex:1;border:1px solid #ddd;border-radius:6px;padding:7px 10px;font-size:13px;">
+    <button onclick="this.parentElement.remove();updatePreview();" style="padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;color:#e24b4a;font-size:13px;">✕</button>`;
+  row.querySelector('input').addEventListener('input', updatePreview);
+  list.appendChild(row);
+}
+
+function addAddresseeValue(val) { addAddressee(val); }
+
+function clearAddressees() {
+  document.getElementById('addresseeList').innerHTML = '';
+  addAddressee('');
+}
+
+function getAddressees() {
+  return Array.from(document.querySelectorAll('#addresseeList input'))
+    .map(i => i.value.trim()).filter(Boolean).join('\n');
+}
 function saveStyles() {
   const styles = {
     lhHindi:     { fs: document.querySelector('#tab-style input[oninput*="lhHindi"]').value, ff: document.querySelector('#tab-style select[onchange*="lhHindi"]').value },
@@ -433,6 +455,7 @@ function saveStyles() {
   alert('Styles saved permanently!');
 }
 
+clearAddressees();
 function loadSavedStyles() {
   const saved = localStorage.getItem('wr_styles');
   if (!saved) return;
@@ -470,7 +493,7 @@ function updatePreview() {
   const setH = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val || ''; };
   set('prev-fileNo', document.getElementById('fileNo').value || 'C&W/BCT/SK/2026/12');
   set('prev-date', document.getElementById('effDate').value || 'As Signed');
-  set('prev-addressees', document.getElementById('addressees').value || 'All SSE/JE (C&W), BCT Division');
+  set('prev-addressees', getAddressees() || 'All SSE/JE (C&W), BCT Division');
   set('prev-subject', document.getElementById('subject').value || 'Subject here');
   set('prev-ref', document.getElementById('reference').value || '—');
   set('prev-sig-name', document.getElementById('signedBy').value || 'ADME (C&W)/BCT');
@@ -486,7 +509,9 @@ function updatePreview() {
 function loadExample() {
   document.getElementById('fileNo').value = 'C&W/BCT/SK/2026/12';
   document.getElementById('effDate').value = '18.03.2026';
-  document.getElementById('addressees').value = 'All SSE/JE (C&W), BCT Division';
+  clearAddressees();
+  addAddresseeValue('All SSE/JE (C&W), BCT Division');
+  addAddresseeValue('All JE (C&W), BCT Division');
   document.getElementById('subject').value = 'Reduction of Sick Coaches — Daily Reporting';
   document.getElementById('reference').value = 'HQ letter No. WR/C&W/2026/SK dated 10.03.2026';
   document.getElementById('instructions').value = 'All SSEs in-charge of sick line are directed to ensure daily inspection and submission of sick coach report to ADME (C&W)/BCT by 08:00 hrs every morning. Non-compliance will be viewed seriously.';
@@ -495,7 +520,8 @@ function loadExample() {
 }
 
 function clearForm() {
-  ['fileNo','effDate','addressees','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value = '');
+  ['fileNo','effDate','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value = '');
+  clearAddressees();
   document.getElementById('status').textContent = '';
   document.getElementById('copyBar').style.display = 'none';
 }
@@ -533,7 +559,7 @@ async function draftDocument() {
         subject:      subject,
         reference:    document.getElementById('reference').value,
         instructions: instructions,
-        addressees:   document.getElementById('addressees').value,
+        addressees:   getAddressees(),
         eff_date:     document.getElementById('effDate').value,
         tone:         activeTone,
         signed_by:    document.getElementById('signedBy').value,
@@ -563,7 +589,7 @@ async function downloadDocx() {
     body: JSON.stringify({
       file_no:      document.getElementById('fileNo').value,
       date:         document.getElementById('effDate').value,
-      addressees:   document.getElementById('addressees').value,
+      addressees:   getAddressees(),
       subject:      document.getElementById('subject').value,
       reference:    document.getElementById('reference').value,
       body:         document.getElementById('bodytext').textContent,
