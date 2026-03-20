@@ -2,262 +2,146 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>BCT Division C&W — Circular Drafter</title>
 <style>
- @media print {
-    .topbar, .tabs, .panel, .copy-bar, p { display: none !important; }
-    .main { display: block !important; }
-    .preview-area { background: white !important; padding: 0 !important; max-height: none !important; }
-    .letterhead { box-shadow: none !important; border: none !important; width: 100% !important; min-height: auto !important; }
-    .lh-top { padding: 10px 20px !important; }
-    .lh-logo { width: 80px !important; height: 80px !important; }
-    .lh-body { padding: 16px 48px !important; }
-    @page { margin: 10mm; size: A4 portrait; }
-  }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { font-family: Arial, sans-serif; background: #f4f6f8; color: #222; }
-  .topbar { background: #1a3a5c; color: white; padding: 12px 24px; }
-  .topbar h1 { font-size: 16px; font-weight: 600; }
+
+  /* TOPBAR */
+  .topbar { background: #1a3a5c; color: white; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .topbar-logo { width: 36px; height: 36px; object-fit: contain; background: white; border-radius: 4px; padding: 2px; flex-shrink: 0; }
+  .topbar h1 { font-size: 14px; font-weight: 600; line-height: 1.3; }
   .topbar p { font-size: 11px; opacity: 0.75; margin-top: 2px; }
-  .tabs { display: flex; border-bottom: 2px solid #1a3a5c; }
-  .tab { padding: 10px 22px; font-size: 13px; cursor: pointer; border: none; background: #e8eef4; color: #1a3a5c; font-weight: 500; border-right: 1px solid #ccd6e0; }
-  .tab.active { background: #1a3a5c; color: white; }
-  .main { display: grid; grid-template-columns: 320px 1fr; gap: 0; min-height: calc(100vh - 90px); }
-  .panel { background: white; border-right: 1px solid #e0e0e0; padding: 16px; overflow-y: auto; max-height: calc(100vh - 90px); }
-  .preview-area { padding: 20px; overflow-y: auto; max-height: calc(100vh - 90px); background: #888; display: flex; flex-direction: column; align-items: center; }
-  .section-title { font-size: 11px; font-weight: 700; color: #1a3a5c; text-transform: uppercase; letter-spacing: 0.6px; margin: 16px 0 10px; padding-bottom: 4px; border-bottom: 1px solid #e0e0e0; }
-  .section-title:first-child { margin-top: 0; }
-  .ctrl { margin-bottom: 10px; }
-  .ctrl label { font-size: 11px; color: #666; font-weight: 600; display: block; margin-bottom: 4px; }
-  .ctrl-row { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
-  .ctrl input[type=range] { flex: 1; }
-  .ctrl select { border: 1px solid #ddd; border-radius: 5px; padding: 6px 8px; font-size: 13px; width: 100%; margin-top: 4px; }
-  .size-val { font-size: 12px; font-weight: 600; color: #1a3a5c; min-width: 34px; text-align: right; }
-  .align-btns { display: flex; gap: 4px; flex: 1; }
-  .align-btn { flex: 1; padding: 5px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-size: 13px; }
-  .align-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
-  .bold-btn { padding: 5px 10px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; }
-  .bold-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
-  .save-btn { background: #1a3a5c; color: white; border: none; padding: 9px 18px; border-radius: 6px; font-size: 13px; cursor: pointer; width: 100%; margin-top: 8px; }
-  .sec-btn { background: white; border: 1px solid #1a3a5c; color: #1a3a5c; padding: 9px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; }
-  .tabpage { display: none; }
-  .tabpage.active { display: block; }
-  .form-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
-  .form-field label { font-size: 11px; color: #666; font-weight: 600; text-transform: uppercase; }
-  .form-field input, .form-field select, .form-field textarea { border: 1px solid #ddd; border-radius: 6px; padding: 8px 10px; font-size: 13px; width: 100%; outline: none; }
-  .form-field textarea { resize: vertical; }
-  .tone-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
-  .tone-btn { padding: 5px 12px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 12px; cursor: pointer; color: #555; }
+
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; display: flex; z-index: 100; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); }
+  .nav-btn { flex: 1; padding: 10px 4px 8px; border: none; background: white; color: #888; font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .nav-btn.active { color: #1a3a5c; }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-indicator { width: 100%; height: 2px; background: transparent; border-radius: 2px; margin-top: 2px; }
+  .nav-btn.active .nav-indicator { background: #1a3a5c; }
+
+  /* MAIN CONTENT */
+  .content { padding-bottom: 70px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* CARDS */
+  .card { background: white; border-radius: 10px; border: 1px solid #e0e0e0; padding: 16px; margin: 12px; }
+  .card-title { font-size: 13px; font-weight: 700; color: #1a3a5c; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+
+  /* FORM FIELDS */
+  .form-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .form-field label { font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-field input, .form-field select, .form-field textarea { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; width: 100%; outline: none; background: white; }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #1a3a5c; }
+  .form-field textarea { resize: vertical; min-height: 80px; }
+
+  /* TONE BUTTONS */
+  .tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tone-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 13px; cursor: pointer; color: #555; }
   .tone-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
-  .draft-btn { background: #1a3a5c; color: white; border: none; padding: 11px 24px; border-radius: 7px; font-size: 14px; cursor: pointer; width: 100%; margin-top: 6px; }
+
+  /* ADDRESSEE ROW */
+  .addr-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .addr-row input { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; outline: none; }
+  .addr-remove { width: 36px; height: 36px; border: 1px solid #ddd; background: white; border-radius: 8px; cursor: pointer; color: #e24b4a; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .add-addr-btn { font-size: 13px; padding: 8px 14px; border: 1px dashed #1a3a5c; color: #1a3a5c; background: white; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 4px; }
+
+  /* ACTION BUTTONS */
+  .draft-btn { background: #1a3a5c; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 4px; font-weight: 600; letter-spacing: 0.3px; }
   .draft-btn:disabled { background: #aaa; }
-  .status { font-size: 12px; color: #888; margin-top: 8px; text-align: center; min-height: 18px; }
-  .copy-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
-  .copy-text-btn { background: white; border: 1px solid #ddd; padding: 5px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; }
+  .sec-btn { background: white; border: 1px solid #1a3a5c; color: #1a3a5c; padding: 10px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+  .btn-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .status { font-size: 13px; color: #888; margin-top: 10px; text-align: center; min-height: 20px; padding: 0 4px; line-height: 1.5; }
 
-  /* Letterhead */
-  .letterhead { border: 1.5px solid #333; background: white; font-family: 'Times New Roman', serif; width: 210mm; min-height: 297mm; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  .lh-top { display: flex; align-items: center; justify-content: space-between; padding: 20px 48px 10px 48px; }
-  .lh-logo { width: 100px; height: 100px; object-fit: contain; }
-  .lh-logo-box { width: 90px; height: 90px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; }
-  .lh-center { text-align: center; flex: 1; padding: 0 10px; }
-  .lh-body { padding: 16px 24px; min-height: 320px; }
+  /* ACTION BAR (after draft) */
+  .action-bar { display: flex; gap: 8px; margin: 12px; }
+  .action-bar button { flex: 1; padding: 12px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .btn-copy { background: #e8eef4; color: #1a3a5c; }
+  .btn-docx { background: #1a3a5c; color: white; }
 
-  @media (max-width: 600px) { .main { grid-template-columns: 1fr; } }
+  /* LETTERHEAD PREVIEW */
+  .preview-wrap { margin: 12px; background: #888; padding: 12px; border-radius: 10px; }
+  .letterhead { background: white; font-family: 'Times New Roman', serif; width: 100%; }
+  .lh-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; }
+  .lh-logo { width: 60px; height: 60px; object-fit: contain; }
+  .lh-logo-box { width: 60px; height: 60px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; }
+  .lh-center { text-align: center; flex: 1; padding: 0 6px; }
+  .lh-body { padding: 14px 16px 20px; }
+  .lh-fileline { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; }
+  .lh-body-text { white-space: pre-wrap; line-height: 1.9; margin-bottom: 20px; text-align: justify; }
+  .lh-sig { margin-top: 24px; }
+  .lh-copy { margin-top: 16px; padding-top: 10px; }
+
+  /* STYLE EDITOR */
+  .style-section { margin-bottom: 4px; }
+  .style-section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: white; border-bottom: 1px solid #eee; cursor: pointer; }
+  .style-section-header span { font-size: 13px; font-weight: 600; color: #1a3a5c; }
+  .style-section-header .arrow { font-size: 12px; color: #aaa; transition: transform 0.2s; }
+  .style-section-header.open .arrow { transform: rotate(180deg); }
+  .style-section-body { display: none; padding: 14px 16px; background: #fafafa; border-bottom: 1px solid #eee; }
+  .style-section-body.open { display: block; }
+  .ctrl { margin-bottom: 12px; }
+  .ctrl label { font-size: 11px; color: #666; font-weight: 700; display: block; margin-bottom: 6px; text-transform: uppercase; }
+  .ctrl-row { display: flex; gap: 8px; align-items: center; }
+  .ctrl input[type=range] { flex: 1; height: 4px; }
+  .ctrl select { border: 1px solid #ddd; border-radius: 8px; padding: 8px 10px; font-size: 14px; width: 100%; margin-top: 4px; background: white; }
+  .size-val { font-size: 13px; font-weight: 700; color: #1a3a5c; min-width: 36px; text-align: right; }
+  .align-btns { display: flex; gap: 6px; flex: 1; }
+  .align-btn { flex: 1; padding: 7px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  .align-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
+  .bold-btn { padding: 7px 12px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; }
+  .bold-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
+  .save-style-btn { background: #1a3a5c; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; cursor: pointer; width: calc(100% - 24px); margin: 12px; font-weight: 600; }
+
+  /* PRINT */
+  @media print {
+    .topbar, .bottom-nav, .action-bar, .preview-wrap > p, .screen:not(#screen-preview) { display: none !important; }
+    .screen#screen-preview { display: block !important; }
+    .preview-wrap { margin: 0 !important; padding: 0 !important; background: white !important; }
+    .letterhead { box-shadow: none !important; }
+    @page { margin: 8mm; size: A4 portrait; }
+  }
+
+  /* DESKTOP — side by side */
+  @media (min-width: 768px) {
+    .bottom-nav { display: none; }
+    .desktop-tabs { display: flex; border-bottom: 2px solid #1a3a5c; }
+    .desktop-tab { padding: 10px 24px; font-size: 13px; cursor: pointer; border: none; background: #e8eef4; color: #1a3a5c; font-weight: 600; border-right: 1px solid #ccd6e0; }
+    .desktop-tab.active { background: #1a3a5c; color: white; }
+    .desktop-layout { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 100px); }
+    .desktop-left { border-right: 1px solid #e0e0e0; overflow-y: auto; max-height: calc(100vh - 100px); background: white; }
+    .desktop-right { overflow-y: auto; max-height: calc(100vh - 100px); background: #888; padding: 20px; }
+    .content { padding-bottom: 0; }
+    .screen { display: none !important; }
+    .desktop-panel { display: none; }
+    .desktop-panel.active { display: block; }
+  }
+  @media (max-width: 767px) {
+    .desktop-tabs, .desktop-layout, .desktop-left, .desktop-right { display: none !important; }
+  }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <h1>BCT Division — C&W Section — Circular Drafter</h1>
-  <p>Western Railway | Mumbai Central | Carriage &amp; Wagon</p>
+  <img src="/logo1.gif" class="topbar-logo" onerror="this.style.display='none'">
+  <div>
+    <h1>BCT Division — C&W Circular Drafter</h1>
+    <p>Western Railway | Mumbai Central</p>
+  </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('style')">Style Editor</button>
-  <button class="tab" onclick="switchTab('draft')">Draft Document</button>
-</div>
+<!-- MOBILE SCREENS -->
+<div class="content" id="mobileContent">
 
-<div class="main">
-  <div class="panel">
+  <!-- DRAFT SCREEN -->
+  <div class="screen active" id="screen-draft">
+    <div class="card">
+      <div class="card-title">Document Details</div>
 
-    <!-- STYLE TAB -->
-    <div class="tabpage active" id="tab-style">
-
-      <div class="section-title">Letterhead — Hindi Text</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="12" max="32" value="17" oninput="applyStyle('lhHindi','fontSize',this.value+'px');document.getElementById('sz-lhHindi').textContent=this.value+'px'">
-          <span class="size-val" id="sz-lhHindi">17px</span>
-        </div>
-        <select onchange="applyStyle('lhHindi','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-          <option value="'Mangal',serif">Mangal</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn" onclick="setAlign('lhHindi','left',this)">&#8676;</button>
-            <button class="align-btn active" onclick="setAlign('lhHindi','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('lhHindi','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn active" id="bold-lhHindi" onclick="toggleBold('lhHindi',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Letterhead — English Text</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="12" max="32" value="16" oninput="applyStyle('lhEnglish','fontSize',this.value+'px');document.getElementById('sz-lhEnglish').textContent=this.value+'px'">
-          <span class="size-val" id="sz-lhEnglish">16px</span>
-        </div>
-        <select onchange="applyStyle('lhEnglish','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-          <option value="Georgia,serif">Georgia</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn" onclick="setAlign('lhEnglish','left',this)">&#8676;</button>
-            <button class="align-btn active" onclick="setAlign('lhEnglish','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('lhEnglish','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn active" id="bold-lhEnglish" onclick="toggleBold('lhEnglish',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">File Number &amp; Date</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="13" oninput="applyStyle('fileline','fontSize',this.value+'px');document.getElementById('sz-fileline').textContent=this.value+'px'">
-          <span class="size-val" id="sz-fileline">13px</span>
-        </div>
-        <select onchange="applyStyle('fileline','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-          <option value="'Courier New',monospace">Courier New</option>
-        </select>
-        <div class="ctrl-row">
-          <button class="bold-btn" id="bold-fileline" onclick="toggleBold('fileline',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Addressed To</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="13" oninput="applyStyle('addressedTo','fontSize',this.value+'px');document.getElementById('sz-addressedTo').textContent=this.value+'px'">
-          <span class="size-val" id="sz-addressedTo">13px</span>
-        </div>
-        <select onchange="applyStyle('addressedTo','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn active" onclick="setAlign('addressedTo','left',this)">&#8676;</button>
-            <button class="align-btn" onclick="setAlign('addressedTo','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('addressedTo','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn" id="bold-addressedTo" onclick="toggleBold('addressedTo',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Subject &amp; Reference</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="13" oninput="applyStyle('subjref','fontSize',this.value+'px');document.getElementById('sz-subjref').textContent=this.value+'px'">
-          <span class="size-val" id="sz-subjref">13px</span>
-        </div>
-        <select onchange="applyStyle('subjref','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn active" onclick="setAlign('subjref','left',this)">&#8676;</button>
-            <button class="align-btn" onclick="setAlign('subjref','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('subjref','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn active" id="bold-subjref" onclick="toggleBold('subjref',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Body Text</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="13" oninput="applyStyle('bodytext','fontSize',this.value+'px');document.getElementById('sz-bodytext').textContent=this.value+'px'">
-          <span class="size-val" id="sz-bodytext">13px</span>
-        </div>
-        <select onchange="applyStyle('bodytext','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn" onclick="setAlign('bodytext','left',this)">&#8676;</button>
-            <button class="align-btn" onclick="setAlign('bodytext','center',this)">&#8596;</button>
-            <button class="align-btn active" onclick="setAlign('bodytext','justify',this)">&#8644;</button>
-          </div>
-          <button class="bold-btn" id="bold-bodytext" onclick="toggleBold('bodytext',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Signature Block</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="13" oninput="applyStyle('sigBlock','fontSize',this.value+'px');document.getElementById('sz-sig').textContent=this.value+'px'">
-          <span class="size-val" id="sz-sig">13px</span>
-        </div>
-        <select onchange="applyStyle('sigBlock','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn active" onclick="setAlign('sigBlock','left',this)">&#8676;</button>
-            <button class="align-btn" onclick="setAlign('sigBlock','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('sigBlock','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn" id="bold-sig" onclick="toggleBold('sigBlock',this)">B</button>
-        </div>
-      </div>
-
-      <div class="section-title">Copy To Section</div>
-      <div class="ctrl">
-        <label>Font size</label>
-        <div class="ctrl-row">
-          <input type="range" min="10" max="20" value="12" oninput="applyStyle('copyBlock','fontSize',this.value+'px');document.getElementById('sz-copy').textContent=this.value+'px'">
-          <span class="size-val" id="sz-copy">12px</span>
-        </div>
-        <select onchange="applyStyle('copyBlock','fontFamily',this.value)">
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Arial,sans-serif">Arial</option>
-          <option value="'Courier New',monospace">Courier New</option>
-        </select>
-        <div class="ctrl-row">
-          <div class="align-btns">
-            <button class="align-btn active" onclick="setAlign('copyBlock','left',this)">&#8676;</button>
-            <button class="align-btn" onclick="setAlign('copyBlock','center',this)">&#8596;</button>
-            <button class="align-btn" onclick="setAlign('copyBlock','right',this)">&#8677;</button>
-          </div>
-          <button class="bold-btn" id="bold-copy" onclick="toggleBold('copyBlock',this)">B</button>
-        </div>
-      </div>
-
-      <button class="save-btn" onclick="saveStyles()">Save Style Settings</button>
-      <p style="font-size:11px;color:#888;margin-top:8px;text-align:center;">Preview updates live. Switch to Draft tab to generate document.</p>
-    </div>
-
-    <!-- DRAFT TAB -->
-    <div class="tabpage" id="tab-draft">
       <div class="form-field">
         <label>Document Type</label>
         <select id="docType">
@@ -268,31 +152,38 @@
           <option value="UO Note">UO Note</option>
         </select>
       </div>
+
       <div class="form-field">
         <label>File Number (after M/)</label>
         <input type="text" id="fileNo" placeholder="e.g. C&W/BCT/SK/2026/12" />
       </div>
+
       <div class="form-field">
         <label>Date</label>
         <input type="text" id="effDate" placeholder="e.g. 18.03.2026" />
       </div>
+
       <div class="form-field">
         <label>Addressed To</label>
         <div id="addresseeList"></div>
-        <button type="button" onclick="addAddressee()" style="font-size:12px;margin-top:4px;padding:5px 12px;border:1px solid #1a3a5c;color:#1a3a5c;background:white;border-radius:5px;cursor:pointer;">+ Add Addressee</button>
+        <button class="add-addr-btn" onclick="addAddressee()">+ Add Addressee</button>
       </div>
+
       <div class="form-field">
         <label>Subject</label>
-        <input type="text" id="subject" placeholder="e.g. Reduction of Sick Coaches — Daily Reporting" />
+        <input type="text" id="subject" placeholder="e.g. Reduction of Sick Coaches" />
       </div>
+
       <div class="form-field">
         <label>Reference (if any)</label>
-        <input type="text" id="reference" placeholder="e.g. HQ letter No. WR/C&W/2026/SK dated 10.03.2026" />
+        <input type="text" id="reference" placeholder="e.g. HQ letter No. WR/C&W/2026" />
       </div>
+
       <div class="form-field">
         <label>Key Instructions (plain language)</label>
-        <textarea id="instructions" rows="4" placeholder="e.g. All SSEs are directed to submit sick coach report by 08:00 hrs daily."></textarea>
+        <textarea id="instructions" placeholder="e.g. All SSEs are directed to submit sick coach report by 08:00 hrs daily."></textarea>
       </div>
+
       <div class="form-field">
         <label>Tone</label>
         <div class="tone-row">
@@ -302,103 +193,222 @@
           <button class="tone-btn" onclick="setTone(this,'reminder')">Reminder</button>
         </div>
       </div>
+
       <div class="form-field">
         <label>Signed by</label>
         <input type="text" id="signedBy" value="ADME (C&W)/BCT" />
       </div>
+
       <div class="form-field">
         <label>For officer</label>
         <input type="text" id="forOfficer" value="Sr. DME (Co)/BCT" />
       </div>
+
       <div class="form-field">
         <label>Copy to</label>
-        <textarea id="copyTo" rows="3" placeholder="1. Sr. DME (C&W)/BCT&#10;2. ADME (G)/BCT&#10;3. Office file"></textarea>
+        <textarea id="copyTo" placeholder="1. Sr. DME (C&W)/BCT&#10;2. ADME (G)/BCT&#10;3. Office file"></textarea>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <button class="sec-btn" style="flex:1;" onclick="loadExample()">Load Example</button>
-        <button class="sec-btn" style="flex:1;" onclick="clearForm()">Clear</button>
+
+      <div class="btn-row">
+        <button class="sec-btn" onclick="loadExample()" style="flex:1;">Load Example</button>
+        <button class="sec-btn" onclick="clearForm()" style="flex:1;">Clear</button>
       </div>
-      <button class="draft-btn" id="draftBtn" onclick="draftDocument()">Draft Document</button>
+
+      <button class="draft-btn" id="draftBtn" onclick="draftDocument()">Generate Draft</button>
       <div class="status" id="status"></div>
     </div>
-
   </div>
 
-  <!-- RIGHT PREVIEW -->
-  <div class="preview-area">
-    <div class="copy-bar" id="copyBar" style="display:none;">
-      <button class="copy-text-btn" onclick="copyText()">Copy Text</button>
-      <button class="copy-text-btn" onclick="downloadDocx()" style="margin-left:8px;background:#1a3a5c;color:white;border-color:#1a3a5c;">Download as DOCX</button>
+  <!-- PREVIEW SCREEN -->
+  <div class="screen" id="screen-preview">
+    <div class="action-bar" id="actionBar" style="display:none;">
+      <button class="action-bar button btn-copy" onclick="copyText()">Copy Text</button>
+      <button class="action-bar button btn-docx" onclick="downloadDocx()">Download DOCX</button>
     </div>
-
-    <div class="letterhead">
-      <div class="lh-top" style="padding: 40px 16px 10px 16px;">
-        <img src="/logo1.gif" class="lh-logo" onerror="this.outerHTML='<div class=\'lh-logo-box\'>WR</div>'">
-        <div class="lh-center">
-          <div id="lhHindi" style="font-size:17px;font-weight:700;font-family:'Times New Roman',serif;text-align:center;">पश्चिम रेलवे</div>
-          <div id="lhEnglish" style="font-size:16px;font-weight:700;font-family:'Times New Roman',serif;text-align:center;letter-spacing:1px;">WESTERN RAILWAY</div>
-          <div style="font-size:13px;text-align:center;font-family:'Times New Roman',serif;">मंडल कार्यालय &nbsp;|&nbsp; Divisional Office</div>
-          <div style="font-size:11px;text-align:center;font-family:'Times New Roman',serif;color:#444;">मुंबई सेंट्रल, मुंबई–400008 &nbsp;|&nbsp; Mumbai Central, Mumbai-400008</div>
+    <div class="preview-wrap">
+      <div class="letterhead">
+        <div class="lh-top">
+          <img src="/logo1.gif" class="lh-logo" onerror="this.outerHTML='<div class=\'lh-logo-box\'>WR</div>'">
+          <div class="lh-center">
+            <div id="lhHindi" style="font-size:15px;font-weight:700;font-family:'Times New Roman',serif;text-align:center;">पश्चिम रेलवे</div>
+            <div id="lhEnglish" style="font-size:14px;font-weight:700;font-family:'Times New Roman',serif;text-align:center;letter-spacing:1px;">WESTERN RAILWAY</div>
+            <div style="font-size:11px;text-align:center;font-family:'Times New Roman',serif;">मंडल कार्यालय | Divisional Office</div>
+            <div style="font-size:9px;text-align:center;font-family:'Times New Roman',serif;color:#444;">मुंबई सेंट्रल, मुंबई–400008 | Mumbai Central, Mumbai-400008</div>
+          </div>
+          <img src="/logo2.jpeg" class="lh-logo" style="width:60px;height:60px;object-fit:contain;" onerror="this.style.display='none'">
         </div>
-        <img src="/logo2.jpeg" class="lh-logo" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
-      </div>
-
-      <div class="lh-body" style="padding: 24px 48px 16px 48px;">
-
-        <!-- File No & Date -->
-        <div id="fileline" style="display:flex;justify-content:space-between;font-size:13px;font-family:'Times New Roman',serif;margin-bottom:14px;">
-          <span>No. M/<span id="prev-fileNo">C&W/BCT/SK/2026/12</span></span>
-          <span>Date: <span id="prev-date">18.03.2026</span></span>
+        <div class="lh-body">
+          <div id="fileline" style="display:flex;justify-content:space-between;font-size:12px;font-family:'Times New Roman',serif;margin-bottom:12px;">
+            <span>No. M/<span id="prev-fileNo">C&W/BCT/SK/2026/12</span></span>
+            <span>Date: <span id="prev-date">18.03.2026</span></span>
+          </div>
+          <div id="addressedTo" style="font-size:12px;font-family:'Times New Roman',serif;margin-bottom:12px;">
+            <div id="prev-addressees">All SSE/JE (C&W), BCT Division</div>
+          </div>
+          <div id="subjref" style="font-size:12px;font-weight:700;font-family:'Times New Roman',serif;margin-bottom:14px;">
+            <div>Subject: <span id="prev-subject">Reduction of Sick Coaches — Daily Reporting</span></div>
+            <div style="font-weight:normal;margin-top:4px;">Reference: <span id="prev-ref">HQ letter No. WR/C&W/2026/SK dated 10.03.2026</span></div>
+          </div>
+          <div id="bodytext" class="lh-body-text" style="font-size:12px;font-family:'Times New Roman',serif;">Your drafted document will appear here after you fill the form and tap Generate Draft.</div>
+          <div id="sigBlock" style="font-size:12px;font-family:'Times New Roman',serif;margin-top:24px;">
+            <div id="prev-sig-name">ADME (C&W)/BCT</div>
+            <div id="prev-sig-for">For Sr. DME (Co)/BCT</div>
+          </div>
+          <div id="copyBlock" style="font-size:11px;font-family:'Times New Roman',serif;margin-top:16px;padding-top:10px;">
+            <div style="font-weight:700;margin-bottom:4px;">Copy to:</div>
+            <div id="prev-copy">1. Sr. DME (C&W)/BCT<br>2. ADME (G)/BCT<br>3. Office file</div>
+          </div>
         </div>
-
-        <!-- Addressed To -->
-        <div id="addressedTo" style="font-size:13px;font-family:'Times New Roman',serif;text-align:left;margin-bottom:14px;">
-          <div id="prev-addressees">All SSE/JE (C&W), BCT Division</div>
-        </div>
-
-        <!-- Subject & Reference -->
-        <div id="subjref" style="font-size:13px;font-weight:700;font-family:'Times New Roman',serif;text-align:left;margin-bottom:16px;">
-          <div>Subject: <span id="prev-subject">Reduction of Sick Coaches — Daily Reporting</span></div>
-          <div style="font-weight:normal;margin-top:6px;">Reference: <span id="prev-ref">HQ letter No. WR/C&W/2026/SK dated 10.03.2026</span></div>
-        </div>
-
-        <!-- Body paragraphs -->
-        <div id="bodytext" style="font-size:13px;font-family:'Times New Roman',serif;text-align:justify;white-space:pre-wrap;line-height:1.9;margin-bottom:24px;">1.  All SSEs in-charge of sick line are directed to ensure daily inspection of all sick coaches and submit a detailed report to ADME (C&W)/BCT by 08:00 hrs every morning.
-
-2.  Non-compliance will be viewed seriously and necessary action will be initiated against defaulting officials.
-
-3.  This issues with the approval of Sr. DME (Co)/BCT.</div>
-
-        <!-- Signature -->
-        <div id="sigBlock" style="font-size:13px;font-family:'Times New Roman',serif;text-align:left;margin-top:28px;">
-          <div id="prev-sig-name">ADME (C&W)/BCT</div>
-          <div id="prev-sig-for">For Sr. DME (Co)/BCT</div>
-        </div>
-
-        <!-- Copy To -->
-        <div id="copyBlock" style="font-size:12px;font-family:'Times New Roman',serif;text-align:left;margin-top:20px;padding-top:12px;">
-          <div style="font-weight:700;margin-bottom:4px;">Copy to:</div>
-          <div id="prev-copy">1. Sr. DME (C&W)/BCT<br>2. ADME (G)/BCT<br>3. Office file</div>
-        </div>
-
       </div>
     </div>
-    <p style="font-size:11px;color:#999;text-align:center;margin-top:10px;">Adjust styles on the left — preview updates instantly.</p>
   </div>
+
+  <!-- STYLE SCREEN -->
+  <div class="screen" id="screen-style">
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Letterhead — Hindi Text</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="12" max="32" value="15" oninput="applyStyle('lhHindi','fontSize',this.value+'px');document.getElementById('sz-lhHindi').textContent=this.value+'px'"><span class="size-val" id="sz-lhHindi">15px</span></div>
+          <select onchange="applyStyle('lhHindi','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option><option value="'Mangal',serif">Mangal</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn" onclick="setAlign('lhHindi','left',this)">&#8676;</button><button class="align-btn active" onclick="setAlign('lhHindi','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('lhHindi','right',this)">&#8677;</button></div><button class="bold-btn active" id="bold-lhHindi" onclick="toggleBold('lhHindi',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Letterhead — English Text</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="12" max="32" value="14" oninput="applyStyle('lhEnglish','fontSize',this.value+'px');document.getElementById('sz-lhEnglish').textContent=this.value+'px'"><span class="size-val" id="sz-lhEnglish">14px</span></div>
+          <select onchange="applyStyle('lhEnglish','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option><option value="Georgia,serif">Georgia</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn" onclick="setAlign('lhEnglish','left',this)">&#8676;</button><button class="align-btn active" onclick="setAlign('lhEnglish','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('lhEnglish','right',this)">&#8677;</button></div><button class="bold-btn active" id="bold-lhEnglish" onclick="toggleBold('lhEnglish',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>File Number &amp; Date</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="12" oninput="applyStyle('fileline','fontSize',this.value+'px');document.getElementById('sz-fileline').textContent=this.value+'px'"><span class="size-val" id="sz-fileline">12px</span></div>
+          <select onchange="applyStyle('fileline','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option><option value="'Courier New',monospace">Courier New</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><button class="bold-btn" id="bold-fileline" onclick="toggleBold('fileline',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Addressed To</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="12" oninput="applyStyle('addressedTo','fontSize',this.value+'px');document.getElementById('sz-addressedTo').textContent=this.value+'px'"><span class="size-val" id="sz-addressedTo">12px</span></div>
+          <select onchange="applyStyle('addressedTo','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn active" onclick="setAlign('addressedTo','left',this)">&#8676;</button><button class="align-btn" onclick="setAlign('addressedTo','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('addressedTo','right',this)">&#8677;</button></div><button class="bold-btn" id="bold-addressedTo" onclick="toggleBold('addressedTo',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Subject &amp; Reference</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="12" oninput="applyStyle('subjref','fontSize',this.value+'px');document.getElementById('sz-subjref').textContent=this.value+'px'"><span class="size-val" id="sz-subjref">12px</span></div>
+          <select onchange="applyStyle('subjref','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn active" onclick="setAlign('subjref','left',this)">&#8676;</button><button class="align-btn" onclick="setAlign('subjref','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('subjref','right',this)">&#8677;</button></div><button class="bold-btn active" id="bold-subjref" onclick="toggleBold('subjref',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Body Text</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="12" oninput="applyStyle('bodytext','fontSize',this.value+'px');document.getElementById('sz-bodytext').textContent=this.value+'px'"><span class="size-val" id="sz-bodytext">12px</span></div>
+          <select onchange="applyStyle('bodytext','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn" onclick="setAlign('bodytext','left',this)">&#8676;</button><button class="align-btn" onclick="setAlign('bodytext','center',this)">&#8596;</button><button class="align-btn active" onclick="setAlign('bodytext','justify',this)">&#8644;</button></div><button class="bold-btn" id="bold-bodytext" onclick="toggleBold('bodytext',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Signature Block</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="12" oninput="applyStyle('sigBlock','fontSize',this.value+'px');document.getElementById('sz-sig').textContent=this.value+'px'"><span class="size-val" id="sz-sig">12px</span></div>
+          <select onchange="applyStyle('sigBlock','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn active" onclick="setAlign('sigBlock','left',this)">&#8676;</button><button class="align-btn" onclick="setAlign('sigBlock','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('sigBlock','right',this)">&#8677;</button></div><button class="bold-btn active" id="bold-sig" onclick="toggleBold('sigBlock',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-section">
+      <div class="style-section-header" onclick="toggleSection(this)">
+        <span>Copy To Section</span><span class="arrow">&#9660;</span>
+      </div>
+      <div class="style-section-body">
+        <div class="ctrl"><label>Font size</label>
+          <div class="ctrl-row"><input type="range" min="10" max="20" value="11" oninput="applyStyle('copyBlock','fontSize',this.value+'px');document.getElementById('sz-copy').textContent=this.value+'px'"><span class="size-val" id="sz-copy">11px</span></div>
+          <select onchange="applyStyle('copyBlock','fontFamily',this.value)"><option value="'Times New Roman',serif">Times New Roman</option><option value="Arial,sans-serif">Arial</option></select>
+          <div class="ctrl-row" style="margin-top:8px;"><div class="align-btns"><button class="align-btn active" onclick="setAlign('copyBlock','left',this)">&#8676;</button><button class="align-btn" onclick="setAlign('copyBlock','center',this)">&#8596;</button><button class="align-btn" onclick="setAlign('copyBlock','right',this)">&#8677;</button></div><button class="bold-btn" id="bold-copy" onclick="toggleBold('copyBlock',this)">B</button></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-style-btn" onclick="saveStyles()">Save Style Settings</button>
+  </div>
+
 </div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-draft" onclick="showScreen('draft')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Draft
+    <div class="nav-indicator"></div>
+  </button>
+  <button class="nav-btn" id="nav-preview" onclick="showScreen('preview')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Preview
+    <div class="nav-indicator"></div>
+  </button>
+  <button class="nav-btn" id="nav-style" onclick="showScreen('style')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v2M12 2v2"/></svg>
+    Style
+    <div class="nav-indicator"></div>
+  </button>
+</nav>
 
 <script>
 let activeTone = 'directive';
-let boldStates = {
-  lhHindi: true, lhEnglish: true, fileline: false,
-  addressedTo: false, subjref: true, bodytext: false,
-  sigBlock: false, copyBlock: false
-};
+let boldStates = { lhHindi:true, lhEnglish:true, fileline:false, addressedTo:false, subjref:true, bodytext:false, sigBlock:true, copyBlock:false };
 
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['style','draft'][i] === name));
-  document.querySelectorAll('.tabpage').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toggleSection(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
 }
 
 function applyStyle(elId, prop, val) {
@@ -418,17 +428,20 @@ function toggleBold(elId, btn) {
   btn.classList.toggle('active', boldStates[elId]);
 }
 
+function setTone(el, tone) {
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  activeTone = tone;
+}
+
 function addAddressee(val) {
   const list = document.getElementById('addresseeList');
   const row = document.createElement('div');
-  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;';
-  row.innerHTML = `<input type="text" value="${val||''}" placeholder="e.g. All SSE (C&W), BCT" style="flex:1;border:1px solid #ddd;border-radius:6px;padding:7px 10px;font-size:13px;">
-    <button onclick="this.parentElement.remove();updatePreview();" style="padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;color:#e24b4a;font-size:13px;">✕</button>`;
-  row.querySelector('input').addEventListener('input', updatePreview);
+  row.className = 'addr-row';
+  row.innerHTML = `<input type="text" value="${val||''}" placeholder="e.g. All SSE (C&W), BCT" oninput="updatePreview()">
+    <button class="addr-remove" onclick="this.parentElement.remove();updatePreview();">&#215;</button>`;
   list.appendChild(row);
 }
-
-function addAddresseeValue(val) { addAddressee(val); }
 
 function clearAddressees() {
   document.getElementById('addresseeList').innerHTML = '';
@@ -439,69 +452,22 @@ function getAddressees() {
   return Array.from(document.querySelectorAll('#addresseeList input'))
     .map(i => i.value.trim()).filter(Boolean);
 }
-function saveStyles() {
-  const styles = {
-    lhHindi:     { fs: document.querySelector('#tab-style input[oninput*="lhHindi"]').value, ff: document.querySelector('#tab-style select[onchange*="lhHindi"]').value },
-    lhEnglish:   { fs: document.querySelector('#tab-style input[oninput*="lhEnglish"]').value, ff: document.querySelector('#tab-style select[onchange*="lhEnglish"]').value },
-    fileline:    { fs: document.querySelector('#tab-style input[oninput*="fileline"]').value, ff: document.querySelector('#tab-style select[onchange*="fileline"]').value },
-    addressedTo: { fs: document.querySelector('#tab-style input[oninput*="addressedTo"]').value, ff: document.querySelector('#tab-style select[onchange*="addressedTo"]').value },
-    subjref:     { fs: document.querySelector('#tab-style input[oninput*="subjref"]').value, ff: document.querySelector('#tab-style select[onchange*="subjref"]').value },
-    bodytext:    { fs: document.querySelector('#tab-style input[oninput*="bodytext"]').value, ff: document.querySelector('#tab-style select[onchange*="bodytext"]').value },
-    sigBlock:    { fs: document.querySelector('#tab-style input[oninput*="sigBlock"]').value, ff: document.querySelector('#tab-style select[onchange*="sigBlock"]').value },
-    copyBlock:   { fs: document.querySelector('#tab-style input[oninput*="copyBlock"]').value, ff: document.querySelector('#tab-style select[onchange*="copyBlock"]').value },
-    boldStates: boldStates
-  };
-  localStorage.setItem('wr_styles', JSON.stringify(styles));
-  alert('Styles saved permanently!');
-}
-
-clearAddressees();
-function loadSavedStyles() {
-  const saved = localStorage.getItem('wr_styles');
-  if (!saved) return;
-  const styles = JSON.parse(saved);
-  const sections = ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'];
-  sections.forEach(id => {
-    if (!styles[id]) return;
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.style.fontSize   = styles[id].fs + 'px';
-    el.style.fontFamily = styles[id].ff;
-    const slider = document.querySelector(`#tab-style input[oninput*="${id}"]`);
-    if (slider) { slider.value = styles[id].fs; document.getElementById('sz-' + id) && (document.getElementById('sz-' + id).textContent = styles[id].fs + 'px'); }
-    const select = document.querySelector(`#tab-style select[onchange*="${id}"]`);
-    if (select) select.value = styles[id].ff;
-  });
-  if (styles.boldStates) {
-    boldStates = styles.boldStates;
-    Object.keys(boldStates).forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.fontWeight = boldStates[id] ? '700' : '400';
-      const btn = document.getElementById('bold-' + id);
-      if (btn) btn.classList.toggle('active', boldStates[id]);
-    });
-  }
-}
-function setTone(el, tone) {
-  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  activeTone = tone;
-}
 
 function updatePreview() {
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val || ''; };
-  const setH = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val || ''; };
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val||''; };
+  const setH = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val||''; };
   set('prev-fileNo', document.getElementById('fileNo').value || 'C&W/BCT/SK/2026/12');
   set('prev-date', document.getElementById('effDate').value || 'As Signed');
-  set('prev-addressees', getAddressees() || 'All SSE/JE (C&W), BCT Division');
+  const addrs = getAddressees();
+  setH('prev-addressees', addrs.length ? addrs.join('<br>') : 'All SSE/JE (C&W), BCT Division');
   set('prev-subject', document.getElementById('subject').value || 'Subject here');
   set('prev-ref', document.getElementById('reference').value || '—');
   set('prev-sig-name', document.getElementById('signedBy').value || 'ADME (C&W)/BCT');
-  set('prev-sig-for', 'For ' + (document.getElementById('forOfficer').value || 'Sr. DME (Co)/BCT'));
-  setH('prev-copy', (document.getElementById('copyTo').value || '').replace(/\n/g,'<br>') || '1.<br>2.');
+  set('prev-sig-for', 'For '+(document.getElementById('forOfficer').value || 'Sr. DME (Co)/BCT'));
+  setH('prev-copy', (document.getElementById('copyTo').value||'').replace(/\n/g,'<br>')||'1.<br>2.');
 }
 
-['fileNo','effDate','addressees','subject','reference','signedBy','forOfficer','copyTo'].forEach(id => {
+['fileNo','effDate','subject','reference','signedBy','forOfficer','copyTo'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updatePreview);
 });
@@ -510,8 +476,8 @@ function loadExample() {
   document.getElementById('fileNo').value = 'C&W/BCT/SK/2026/12';
   document.getElementById('effDate').value = '18.03.2026';
   clearAddressees();
-  addAddresseeValue('All SSE/JE (C&W), BCT Division');
-  addAddresseeValue('All JE (C&W), BCT Division');
+  addAddressee('All SSE/JE (C&W), BCT Division');
+  addAddressee('All JE (C&W), BCT Division');
   document.getElementById('subject').value = 'Reduction of Sick Coaches — Daily Reporting';
   document.getElementById('reference').value = 'HQ letter No. WR/C&W/2026/SK dated 10.03.2026';
   document.getElementById('instructions').value = 'All SSEs in-charge of sick line are directed to ensure daily inspection and submission of sick coach report to ADME (C&W)/BCT by 08:00 hrs every morning. Non-compliance will be viewed seriously.';
@@ -520,21 +486,79 @@ function loadExample() {
 }
 
 function clearForm() {
-  ['fileNo','effDate','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value = '');
+  ['fileNo','effDate','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value='');
   clearAddressees();
   document.getElementById('status').textContent = '';
-  document.getElementById('copyBar').style.display = 'none';
+  document.getElementById('actionBar').style.display = 'none';
 }
 
 function copyText() {
-  const text = document.getElementById('bodytext').textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    document.querySelector('.copy-text-btn').textContent = 'Copied!';
-    setTimeout(() => document.querySelector('.copy-text-btn').textContent = 'Copy Text', 2000);
+  navigator.clipboard.writeText(document.getElementById('bodytext').textContent).then(() => {
+    alert('Text copied!');
   });
 }
 
-loadSavedStyles();
+async function downloadDocx() {
+  const res = await fetch('/download', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      file_no:     document.getElementById('fileNo').value,
+      date:        document.getElementById('effDate').value,
+      addressees:  getAddressees(),
+      subject:     document.getElementById('subject').value,
+      reference:   document.getElementById('reference').value,
+      body:        document.getElementById('bodytext').textContent,
+      signed_by:   document.getElementById('signedBy').value,
+      for_officer: document.getElementById('forOfficer').value,
+      copy_to:     document.getElementById('copyTo').value
+    })
+  });
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'BCT_CW_Document.docx';
+  a.click();
+}
+
+function saveStyles() {
+  const styles = {};
+  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id => {
+    const slider = document.querySelector(`input[oninput*="${id}"]`);
+    const select = document.querySelector(`select[onchange*="${id}"]`);
+    if (slider) styles[id] = { fs: slider.value, ff: select ? select.value : '' };
+  });
+  styles.boldStates = boldStates;
+  localStorage.setItem('wr_styles', JSON.stringify(styles));
+  alert('Styles saved!');
+}
+
+function loadSavedStyles() {
+  const saved = localStorage.getItem('wr_styles');
+  if (!saved) return;
+  const styles = JSON.parse(saved);
+  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id => {
+    if (!styles[id]) return;
+    const el = document.getElementById(id);
+    if (el) { el.style.fontSize = styles[id].fs+'px'; el.style.fontFamily = styles[id].ff; }
+    const slider = document.querySelector(`input[oninput*="${id}"]`);
+    if (slider) { slider.value = styles[id].fs; const sv = document.getElementById('sz-'+id); if(sv) sv.textContent = styles[id].fs+'px'; }
+    const select = document.querySelector(`select[onchange*="${id}"]`);
+    if (select && styles[id].ff) select.value = styles[id].ff;
+  });
+  if (styles.boldStates) {
+    boldStates = styles.boldStates;
+    Object.keys(boldStates).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.fontWeight = boldStates[id] ? '700' : '400';
+      const btn = document.getElementById('bold-'+id) || document.getElementById('bold-sig');
+      if (btn && id === 'sigBlock') btn.classList.toggle('active', boldStates[id]);
+      else if (btn) btn.classList.toggle('active', boldStates[id]);
+    });
+  }
+}
+
 async function draftDocument() {
   const subject = document.getElementById('subject').value.trim();
   const instructions = document.getElementById('instructions').value.trim();
@@ -546,8 +570,8 @@ async function draftDocument() {
   const btn = document.getElementById('draftBtn');
   const status = document.getElementById('status');
   btn.disabled = true;
-  btn.textContent = 'Drafting...';
-  status.textContent = 'Generating... please wait';
+  btn.textContent = 'Generating...';
+  status.textContent = 'Please wait, drafting your document...';
 
   try {
     const res = await fetch('/draft', {
@@ -572,39 +596,20 @@ async function draftDocument() {
       status.textContent = 'Error: ' + data.error;
     } else {
       document.getElementById('bodytext').textContent = data.text;
-      document.getElementById('copyBar').style.display = 'flex';
-      status.textContent = 'Done! Check the preview on the right.';
-      switchTab('style');
+      document.getElementById('actionBar').style.display = 'flex';
+      status.textContent = 'Done! Tap Preview to see your document.';
+      showScreen('preview');
     }
   } catch(e) {
-    status.textContent = 'Cannot connect. Make sure app.py is running.';
+    status.textContent = 'Cannot connect. Make sure app is running.';
   }
   btn.disabled = false;
-  btn.textContent = 'Draft Document';
+  btn.textContent = 'Generate Draft';
 }
-async function downloadDocx() {
-  const res = await fetch('/download', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      file_no:      document.getElementById('fileNo').value,
-      date:         document.getElementById('effDate').value,
-      addressees:   getAddressees(),
-      subject:      document.getElementById('subject').value,
-      reference:    document.getElementById('reference').value,
-      body:         document.getElementById('bodytext').textContent,
-      signed_by:    document.getElementById('signedBy').value,
-      for_officer:  document.getElementById('forOfficer').value,
-      copy_to:      document.getElementById('copyTo').value
-    })
-  });
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'BCT_CW_Document.docx';
-  a.click();
-}
+
+clearAddressees();
+loadSavedStyles();
+updatePreview();
 </script>
 </body>
 </html>
