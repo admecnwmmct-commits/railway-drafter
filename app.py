@@ -30,7 +30,8 @@ def draft():
     subject      = data.get('subject', '')
     reference    = data.get('reference', '')
     instructions = data.get('instructions', '')
-    addressees   = data.get('addressees', 'All Concerned').replace('||', ', ')
+    addr_list    = data.get('addressees', ['All Concerned'])
+    addressees   = ', '.join(addr_list) if isinstance(addr_list, list) else addr_list
     authority    = data.get('for_officer', 'Sr. DME (Co)/BCT')
     tone         = data.get('tone', 'directive')
 
@@ -80,7 +81,8 @@ def download():
     data       = request.json
     file_no    = data.get('file_no', '')
     date       = data.get('date', '')
-    addressees = data.get('addressees', '')
+    addr_raw   = data.get('addressees', '')
+    addressees = addr_raw if isinstance(addr_raw, str) else addr_raw
     subject    = data.get('subject', '')
     reference  = data.get('reference', '')
     body       = data.get('body', '')
@@ -159,7 +161,10 @@ def download():
 
     # Addressed To — split by || and put each on separate line
     if addressees:
-        addr_lines = [a.strip() for a in addressees.split('||') if a.strip()]
+        if isinstance(addressees, list):
+            addr_lines = [a.strip() for a in addressees if a.strip()]
+        else:
+            addr_lines = [a.strip() for a in addressees.split('||') if a.strip()]
         for addr_line in addr_lines:
             p_to = doc.add_paragraph()
             p_to.add_run(addr_line).font.size = Pt(11)
