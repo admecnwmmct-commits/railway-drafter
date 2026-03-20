@@ -163,8 +163,10 @@ def download():
 
     # Addressed To
     if addressees:
-        p_to = doc.add_paragraph()
-        p_to.add_run(addressees).font.size = Pt(11)
+        for addr_line in addressees.split('\n'):
+            if addr_line.strip():
+                p_to = doc.add_paragraph()
+                p_to.add_run(addr_line.strip()).font.size = Pt(11)
 
     doc.add_paragraph('')
 
