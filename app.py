@@ -30,7 +30,7 @@ def draft():
     subject      = data.get('subject', '')
     reference    = data.get('reference', '')
     instructions = data.get('instructions', '')
-    addressees   = data.get('addressees', 'All Concerned')
+    addressees   = data.get('addressees', 'All Concerned').replace('||', ', ')
     authority    = data.get('for_officer', 'Sr. DME (Co)/BCT')
     tone         = data.get('tone', 'directive')
 
@@ -150,13 +150,14 @@ def download():
     p_file = doc.add_paragraph()
     run_no = p_file.add_run(f'No. M/{file_no}')
     run_no.font.size = Pt(11)
+    run_no.font.bold = True
     p_file.add_run('\t\t\t\t\t')
     run_date = p_file.add_run(f'Date: {date}')
     run_date.font.size = Pt(11)
 
     doc.add_paragraph('')
 
-  # Addressed To — each on separate line
+    # Addressed To — split by || and put each on separate line
     if addressees:
         addr_lines = [a.strip() for a in addressees.split('||') if a.strip()]
         for addr_line in addr_lines:
@@ -194,10 +195,14 @@ def download():
 
     # Signature
     p_sig1 = doc.add_paragraph()
-    p_sig1.add_run(signed_by).font.size = Pt(11)
+    r1 = p_sig1.add_run(signed_by)
+    r1.font.size = Pt(11)
+    r1.font.bold = True
 
     p_sig2 = doc.add_paragraph()
-    p_sig2.add_run(f'For {for_off}').font.size = Pt(11)
+    r2 = p_sig2.add_run(f'For {for_off}')
+    r2.font.size = Pt(11)
+    r2.font.bold = True
 
     doc.add_paragraph('')
 
