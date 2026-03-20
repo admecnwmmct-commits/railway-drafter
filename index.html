@@ -252,7 +252,7 @@
         </div>
       </div>
 
-      <button class="save-btn" onclick="alert('Styles saved! Switch to Draft Document tab to generate content.')">Save Style Settings</button>
+      <button class="save-btn" onclick="saveStyles()">Save Style Settings</button>
       <p style="font-size:11px;color:#888;margin-top:8px;text-align:center;">Preview updates live. Switch to Draft tab to generate document.</p>
     </div>
 
@@ -417,6 +417,48 @@ function toggleBold(elId, btn) {
   btn.classList.toggle('active', boldStates[elId]);
 }
 
+function saveStyles() {
+  const styles = {
+    lhHindi:     { fs: document.querySelector('#tab-style input[oninput*="lhHindi"]').value, ff: document.querySelector('#tab-style select[onchange*="lhHindi"]').value },
+    lhEnglish:   { fs: document.querySelector('#tab-style input[oninput*="lhEnglish"]').value, ff: document.querySelector('#tab-style select[onchange*="lhEnglish"]').value },
+    fileline:    { fs: document.querySelector('#tab-style input[oninput*="fileline"]').value, ff: document.querySelector('#tab-style select[onchange*="fileline"]').value },
+    addressedTo: { fs: document.querySelector('#tab-style input[oninput*="addressedTo"]').value, ff: document.querySelector('#tab-style select[onchange*="addressedTo"]').value },
+    subjref:     { fs: document.querySelector('#tab-style input[oninput*="subjref"]').value, ff: document.querySelector('#tab-style select[onchange*="subjref"]').value },
+    bodytext:    { fs: document.querySelector('#tab-style input[oninput*="bodytext"]').value, ff: document.querySelector('#tab-style select[onchange*="bodytext"]').value },
+    sigBlock:    { fs: document.querySelector('#tab-style input[oninput*="sigBlock"]').value, ff: document.querySelector('#tab-style select[onchange*="sigBlock"]').value },
+    copyBlock:   { fs: document.querySelector('#tab-style input[oninput*="copyBlock"]').value, ff: document.querySelector('#tab-style select[onchange*="copyBlock"]').value },
+    boldStates: boldStates
+  };
+  localStorage.setItem('wr_styles', JSON.stringify(styles));
+  alert('Styles saved permanently!');
+}
+
+function loadSavedStyles() {
+  const saved = localStorage.getItem('wr_styles');
+  if (!saved) return;
+  const styles = JSON.parse(saved);
+  const sections = ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'];
+  sections.forEach(id => {
+    if (!styles[id]) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.fontSize   = styles[id].fs + 'px';
+    el.style.fontFamily = styles[id].ff;
+    const slider = document.querySelector(`#tab-style input[oninput*="${id}"]`);
+    if (slider) { slider.value = styles[id].fs; document.getElementById('sz-' + id) && (document.getElementById('sz-' + id).textContent = styles[id].fs + 'px'); }
+    const select = document.querySelector(`#tab-style select[onchange*="${id}"]`);
+    if (select) select.value = styles[id].ff;
+  });
+  if (styles.boldStates) {
+    boldStates = styles.boldStates;
+    Object.keys(boldStates).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.fontWeight = boldStates[id] ? '700' : '400';
+      const btn = document.getElementById('bold-' + id);
+      if (btn) btn.classList.toggle('active', boldStates[id]);
+    });
+  }
+}
 function setTone(el, tone) {
   document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
@@ -466,6 +508,7 @@ function copyText() {
   });
 }
 
+loadSavedStyles();
 async function draftDocument() {
   const subject = document.getElementById('subject').value.trim();
   const instructions = document.getElementById('instructions').value.trim();
