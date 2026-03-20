@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from groq import Groq
 from docx import Document
-from docx.shared import Pt, Inches, RGBColor
+from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import os
 import io
@@ -25,7 +25,7 @@ def logo2():
 
 @app.route('/draft', methods=['POST'])
 def draft():
-    data = request.json
+    data         = request.json
     doc_type     = data.get('doc_type', 'Office Order')
     subject      = data.get('subject', '')
     reference    = data.get('reference', '')
@@ -77,7 +77,7 @@ Write only the numbered body paragraphs now:"""
 
 @app.route('/download', methods=['POST'])
 def download():
-    data = request.json
+    data       = request.json
     file_no    = data.get('file_no', '')
     date       = data.get('date', '')
     addressees = data.get('addressees', '')
@@ -120,15 +120,11 @@ def download():
 
     p_hindi = center_cell.add_paragraph('पश्चिम रेलवे')
     p_hindi.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_hindi = p_hindi.runs[0]
-    run_hindi.font.size = Pt(16)
-    run_hindi.font.bold = True
+    r = p_hindi.runs[0]; r.font.size = Pt(16); r.font.bold = True
 
     p_eng = center_cell.add_paragraph('WESTERN RAILWAY')
     p_eng.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_eng = p_eng.runs[0]
-    run_eng.font.size = Pt(15)
-    run_eng.font.bold = True
+    r = p_eng.runs[0]; r.font.size = Pt(15); r.font.bold = True
 
     p_div = center_cell.add_paragraph('मंडल कार्यालय  |  Divisional Office')
     p_div.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -150,23 +146,22 @@ def download():
 
     doc.add_paragraph('')
 
-    # File No and Date on same line
+    # File No and Date
     p_file = doc.add_paragraph()
     run_no = p_file.add_run(f'No. M/{file_no}')
     run_no.font.size = Pt(11)
-    # Add tab spaces to push date to right
     p_file.add_run('\t\t\t\t\t')
     run_date = p_file.add_run(f'Date: {date}')
     run_date.font.size = Pt(11)
 
     doc.add_paragraph('')
 
-    # Addressed To
+    # Addressed To — each on separate line
     if addressees:
-        for addr_line in addressees.split('\n'):
-            if addr_line.strip():
-                p_to = doc.add_paragraph()
-                p_to.add_run(addr_line.strip()).font.size = Pt(11)
+        addr_lines = [a.strip() for a in addressees.split('\n') if a.strip()]
+        for addr_line in addr_lines:
+            p_to = doc.add_paragraph()
+            p_to.add_run(addr_line).font.size = Pt(11)
 
     doc.add_paragraph('')
 
@@ -199,27 +194,25 @@ def download():
 
     # Signature
     p_sig1 = doc.add_paragraph()
-    run_s1 = p_sig1.add_run(signed_by)
-    run_s1.font.size = Pt(11)
+    p_sig1.add_run(signed_by).font.size = Pt(11)
 
     p_sig2 = doc.add_paragraph()
-    run_s2 = p_sig2.add_run(f'For {for_off}')
-    run_s2.font.size = Pt(11)
+    p_sig2.add_run(f'For {for_off}').font.size = Pt(11)
 
     doc.add_paragraph('')
 
     # Copy To
     if copy_to:
-        p_copy_title = doc.add_paragraph()
-        run_ct = p_copy_title.add_run('Copy to:')
-        run_ct.font.size = Pt(11)
-        run_ct.font.bold = True
+        p_ct = doc.add_paragraph()
+        r = p_ct.add_run('Copy to:')
+        r.font.size = Pt(11)
+        r.font.bold = True
         for line in copy_to.split('\n'):
             if line.strip():
                 p_copy = doc.add_paragraph()
-                p_copy.add_run(line).font.size = Pt(11)
+                p_copy.add_run(line.strip()).font.size = Pt(11)
 
-    # Save to memory buffer
+    # Save to buffer
     buffer = io.BytesIO()
     doc.save(buffer)
     buffer.seek(0)
