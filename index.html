@@ -437,7 +437,7 @@ function clearAddressees() {
 
 function getAddressees() {
   return Array.from(document.querySelectorAll('#addresseeList input'))
-    .map(i => i.value.trim()).filter(Boolean).join('\n');
+    .map(i => i.value.trim()).filter(Boolean).join('||');
 }
 function saveStyles() {
   const styles = {

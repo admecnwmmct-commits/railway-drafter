@@ -156,9 +156,9 @@ def download():
 
     doc.add_paragraph('')
 
-    # Addressed To — each on separate line
+  # Addressed To — each on separate line
     if addressees:
-        addr_lines = [a.strip() for a in addressees.split('\n') if a.strip()]
+        addr_lines = [a.strip() for a in addressees.split('||') if a.strip()]
         for addr_line in addr_lines:
             p_to = doc.add_paragraph()
             p_to.add_run(addr_line).font.size = Pt(11)
