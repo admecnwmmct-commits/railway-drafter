@@ -27,6 +27,21 @@
   .form-field input, .form-field select, .form-field textarea { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; width: 100%; outline: none; background: white; }
   .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #1a3a5c; }
   .form-field textarea { resize: vertical; min-height: 80px; }
+
+  /* DATE PICKER */
+  .date-row { display: flex; gap: 8px; }
+  .date-row input[type=date] { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; outline: none; background: white; }
+  .date-row input[type=date]:focus { border-color: #1a3a5c; }
+  .date-display { font-size: 13px; color: #1a3a5c; margin-top: 4px; font-weight: 600; min-height: 18px; }
+
+  /* FILE NO */
+  .fileno-row { display: flex; gap: 8px; }
+  .fileno-row select { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none; background: white; }
+  .fileno-row input { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none; background: white; }
+  .fileno-row select:focus, .fileno-row input:focus { border-color: #1a3a5c; }
+  .add-fileno-btn { padding: 10px 12px; border: 1px solid #1a3a5c; background: white; color: #1a3a5c; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+
+  /* ADDR / COPY */
   .tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .tone-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 13px; cursor: pointer; color: #555; }
   .tone-btn.active { background: #1a3a5c; color: white; border-color: #1a3a5c; }
@@ -34,15 +49,22 @@
   .addr-row input { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; outline: none; }
   .addr-remove { width: 36px; height: 36px; border: 1px solid #ddd; background: white; border-radius: 8px; cursor: pointer; color: #e24b4a; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .add-addr-btn { font-size: 13px; padding: 8px 14px; border: 1px dashed #1a3a5c; color: #1a3a5c; background: white; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 4px; }
-  .draft-btn { background: #1a3a5c; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 4px; font-weight: 600; letter-spacing: 0.3px; }
+
+  /* SETS BUTTONS */
+  .sets-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+  .sets-bar-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; }
+  .set-chip { font-size: 12px; padding: 5px 10px; background: #e8eef4; color: #1a3a5c; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; }
+  .set-chip:hover { background: #1a3a5c; color: white; }
+  .save-set-btn { font-size: 12px; padding: 5px 10px; background: white; color: #f0a500; border: 1px solid #f0a500; border-radius: 20px; cursor: pointer; font-weight: 600; }
+
+  /* ACTION BUTTONS */
+  .draft-btn { background: #1a3a5c; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 4px; font-weight: 600; }
   .draft-btn:disabled { background: #aaa; }
   .sec-btn { background: white; border: 1px solid #1a3a5c; color: #1a3a5c; padding: 10px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; }
   .btn-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .status { font-size: 13px; color: #888; margin-top: 10px; text-align: center; min-height: 20px; padding: 0 4px; line-height: 1.5; }
-
-  /* ACTION BAR */
   .action-bar { display: flex; gap: 8px; margin: 12px; flex-wrap: wrap; }
-  .action-bar button { flex: 1; min-width: 120px; padding: 12px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .action-bar button { flex: 1; min-width: 100px; padding: 12px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
   .btn-copy { background: #e8eef4; color: #1a3a5c; }
   .btn-docx { background: #1a3a5c; color: white; }
   .btn-whatsapp { background: #25D366; color: white; }
@@ -93,8 +115,8 @@
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: 14px; padding: 20px; margin: 20px; width: 100%; max-width: 420px; }
   .modal h3 { font-size: 16px; font-weight: 700; color: #1a3a5c; margin-bottom: 14px; }
-  .modal input { border: 1px solid #ddd; border-radius: 8px; padding: 12px; font-size: 15px; width: 100%; outline: none; margin-bottom: 14px; }
-  .modal input:focus { border-color: #1a3a5c; }
+  .modal input, .modal textarea { border: 1px solid #ddd; border-radius: 8px; padding: 12px; font-size: 15px; width: 100%; outline: none; margin-bottom: 14px; }
+  .modal input:focus, .modal textarea:focus { border-color: #1a3a5c; }
   .modal-btns { display: flex; gap: 10px; }
   .modal-save { flex: 1; padding: 12px; background: #1a3a5c; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
   .modal-cancel { flex: 1; padding: 12px; background: white; border: 1px solid #ddd; color: #555; border-radius: 8px; font-size: 14px; cursor: pointer; }
@@ -106,7 +128,6 @@
     .letterhead { box-shadow: none !important; }
     @page { margin: 8mm; size: A4 portrait; }
   }
-
   @media (min-width: 768px) {
     .content { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
     .bottom-nav { max-width: 480px; left: 50%; transform: translateX(-50%); }
@@ -123,14 +144,50 @@
   </div>
 </div>
 
-<!-- SAVE TEMPLATE MODAL -->
+<!-- TEMPLATE MODAL -->
 <div class="modal-overlay" id="tplModal">
   <div class="modal">
     <h3>Save as Template</h3>
-    <input type="text" id="tplName" placeholder="Template name e.g. Sick Coach Report" maxlength="50" />
+    <input type="text" id="tplName" placeholder="e.g. Sick Coach Daily Report" maxlength="50" />
     <div class="modal-btns">
       <button class="modal-cancel" onclick="closeTplModal()">Cancel</button>
-      <button class="modal-save" onclick="confirmSaveTemplate()">Save Template</button>
+      <button class="modal-save" onclick="confirmSaveTemplate()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD FILE NO MODAL -->
+<div class="modal-overlay" id="fileNoModal">
+  <div class="modal">
+    <h3>Add File Number</h3>
+    <input type="text" id="newFileNoInput" placeholder="e.g. C&W/BCT/SK/2026" maxlength="60" />
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeFileNoModal()">Cancel</button>
+      <button class="modal-save" onclick="confirmAddFileNo()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE ADDR SET MODAL -->
+<div class="modal-overlay" id="addrSetModal">
+  <div class="modal">
+    <h3 id="addrSetModalTitle">Save Addressee Set</h3>
+    <input type="text" id="addrSetName" placeholder="Set name e.g. All SSE & JE" maxlength="40" />
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeAddrSetModal()">Cancel</button>
+      <button class="modal-save" onclick="confirmSaveAddrSet()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE COPY SET MODAL -->
+<div class="modal-overlay" id="copySetModal">
+  <div class="modal">
+    <h3>Save Copy To Set</h3>
+    <input type="text" id="copySetName" placeholder="Set name e.g. Standard Copy" maxlength="40" />
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeCopySetModal()">Cancel</button>
+      <button class="modal-save" onclick="confirmSaveCopySet()">Save</button>
     </div>
   </div>
 </div>
@@ -142,6 +199,7 @@
     <div class="card">
       <div class="card-title">Document Details</div>
 
+      <!-- Document Type -->
       <div class="form-field">
         <label>Document Type</label>
         <select id="docType">
@@ -152,31 +210,59 @@
           <option value="UO Note">UO Note</option>
         </select>
       </div>
+
+      <!-- FILE NUMBER — dropdown + manage -->
       <div class="form-field">
-        <label>File Number (after M/)</label>
-        <input type="text" id="fileNo" placeholder="e.g. C&W/BCT/SK/2026/12" />
+        <label>File Number</label>
+        <div class="fileno-row">
+          <select id="fileNoSelect" onchange="onFileNoSelect(this.value)">
+            <option value="">-- Select or add new --</option>
+          </select>
+          <button class="add-fileno-btn" onclick="openFileNoModal()">+ Add</button>
+        </div>
+        <input type="text" id="fileNo" placeholder="Selected file number will appear here" style="margin-top:6px;" readonly />
       </div>
+
+      <!-- DATE — calendar picker -->
       <div class="form-field">
         <label>Date</label>
-        <input type="text" id="effDate" placeholder="e.g. 18.03.2026" />
+        <input type="date" id="effDatePicker" onchange="onDateChange(this.value)" />
+        <div class="date-display" id="dateDisplay"></div>
       </div>
+
+      <!-- ADDRESSED TO -->
       <div class="form-field">
         <label>Addressed To</label>
+        <div class="sets-bar" id="addrSetsBar">
+          <span class="sets-bar-label">Saved sets:</span>
+          <span style="font-size:12px;color:#bbb;" id="addrSetsEmpty">None saved yet</span>
+        </div>
         <div id="addresseeList"></div>
-        <button class="add-addr-btn" onclick="addAddressee()">+ Add Addressee</button>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="add-addr-btn" style="flex:1;" onclick="addAddressee()">+ Add Addressee</button>
+          <button class="save-set-btn" onclick="openAddrSetModal()">Save as Set</button>
+        </div>
       </div>
+
+      <!-- SUBJECT -->
       <div class="form-field">
         <label>Subject</label>
         <input type="text" id="subject" placeholder="e.g. Reduction of Sick Coaches" />
       </div>
+
+      <!-- REFERENCE -->
       <div class="form-field">
         <label>Reference (if any)</label>
         <input type="text" id="reference" placeholder="e.g. HQ letter No. WR/C&W/2026" />
       </div>
+
+      <!-- INSTRUCTIONS -->
       <div class="form-field">
         <label>Key Instructions (plain language)</label>
         <textarea id="instructions" placeholder="e.g. All SSEs are directed to submit sick coach report by 08:00 hrs daily."></textarea>
       </div>
+
+      <!-- TONE -->
       <div class="form-field">
         <label>Tone</label>
         <div class="tone-row">
@@ -186,6 +272,8 @@
           <button class="tone-btn" onclick="setTone(this,'reminder')">Reminder</button>
         </div>
       </div>
+
+      <!-- SIGNED BY -->
       <div class="form-field">
         <label>Signed by</label>
         <input type="text" id="signedBy" value="ADME (C&W)/BCT" />
@@ -194,9 +282,16 @@
         <label>For officer</label>
         <input type="text" id="forOfficer" value="Sr. DME (Co)/BCT" />
       </div>
+
+      <!-- COPY TO -->
       <div class="form-field">
         <label>Copy to</label>
+        <div class="sets-bar" id="copySetsBar">
+          <span class="sets-bar-label">Saved sets:</span>
+          <span style="font-size:12px;color:#bbb;" id="copySetsEmpty">None saved yet</span>
+        </div>
         <textarea id="copyTo" placeholder="1. Sr. DME (C&W)/BCT&#10;2. ADME (G)/BCT&#10;3. Office file"></textarea>
+        <button class="save-set-btn" style="margin-top:6px;width:auto;align-self:flex-start;" onclick="openCopySetModal()">Save as Set</button>
       </div>
 
       <div class="btn-row">
@@ -230,24 +325,24 @@
         </div>
         <div class="lh-body">
           <div id="fileline" style="display:flex;justify-content:space-between;font-size:12px;font-family:'Times New Roman',serif;margin-bottom:12px;">
-            <span>No. M/<span id="prev-fileNo">C&W/BCT/SK/2026/12</span></span>
-            <span>Date: <span id="prev-date">18.03.2026</span></span>
+            <span>No. M/<span id="prev-fileNo"></span></span>
+            <span>Date: <span id="prev-date"></span></span>
           </div>
           <div id="addressedTo" style="font-size:12px;font-family:'Times New Roman',serif;margin-bottom:12px;">
-            <div id="prev-addressees">All SSE/JE (C&W), BCT Division</div>
+            <div id="prev-addressees"></div>
           </div>
           <div id="subjref" style="font-size:12px;font-weight:700;font-family:'Times New Roman',serif;margin-bottom:14px;">
-            <div>Subject: <span id="prev-subject">Reduction of Sick Coaches — Daily Reporting</span></div>
-            <div style="font-weight:normal;margin-top:4px;">Reference: <span id="prev-ref">HQ letter No. WR/C&W/2026/SK dated 10.03.2026</span></div>
+            <div>Subject: <span id="prev-subject"></span></div>
+            <div style="font-weight:normal;margin-top:4px;">Reference: <span id="prev-ref"></span></div>
           </div>
-          <div id="bodytext" class="lh-body-text" style="font-size:12px;font-family:'Times New Roman',serif;">Your drafted document will appear here after you fill the form and tap Generate Draft.</div>
+          <div id="bodytext" class="lh-body-text" style="font-size:12px;font-family:'Times New Roman',serif;">Tap Generate Draft to create your document.</div>
           <div id="sigBlock" style="font-size:12px;font-weight:700;font-family:'Times New Roman',serif;margin-top:24px;">
             <div id="prev-sig-name">ADME (C&W)/BCT</div>
             <div id="prev-sig-for">For Sr. DME (Co)/BCT</div>
           </div>
           <div id="copyBlock" style="font-size:11px;font-family:'Times New Roman',serif;margin-top:16px;padding-top:10px;">
             <div style="font-weight:700;margin-bottom:4px;">Copy to:</div>
-            <div id="prev-copy">1. Sr. DME (C&W)/BCT<br>2. ADME (G)/BCT<br>3. Office file</div>
+            <div id="prev-copy"></div>
           </div>
         </div>
       </div>
@@ -258,13 +353,12 @@
   <div class="screen" id="screen-templates">
     <div class="card">
       <div class="card-title">Saved Templates</div>
-      <div id="tplList"><div class="tpl-empty">No templates saved yet. Draft a document and tap "Save Template" to save it here.</div></div>
+      <div id="tplList"><div class="tpl-empty">No templates yet. Draft a document and tap Save Template.</div></div>
     </div>
   </div>
 
   <!-- STYLE SCREEN -->
   <div class="screen" id="screen-style">
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Letterhead — Hindi Text</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -275,7 +369,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Letterhead — English Text</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -286,7 +379,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>File Number &amp; Date</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -297,7 +389,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Addressed To</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -308,7 +399,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Subject &amp; Reference</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -319,7 +409,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Body Text</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -330,7 +419,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Signature Block</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -341,7 +429,6 @@
         </div>
       </div>
     </div>
-
     <div class="style-section">
       <div class="style-section-header" onclick="toggleSection(this)"><span>Copy To Section</span><span class="arrow">&#9660;</span></div>
       <div class="style-section-body">
@@ -352,7 +439,6 @@
         </div>
       </div>
     </div>
-
     <button class="save-style-btn" onclick="saveStyles()">Save Style Settings</button>
   </div>
 
@@ -382,6 +468,7 @@
 let activeTone = 'directive';
 let boldStates = { lhHindi:true, lhEnglish:true, fileline:false, addressedTo:false, subjref:true, bodytext:false, sigBlock:true, copyBlock:false };
 
+/* ---- NAVIGATION ---- */
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -395,29 +482,61 @@ function toggleSection(header) {
   header.nextElementSibling.classList.toggle('open');
 }
 
-function applyStyle(elId, prop, val) {
-  const el = document.getElementById(elId);
-  if (el) el.style[prop] = val;
+/* ---- DATE PICKER ---- */
+function onDateChange(val) {
+  if (!val) { document.getElementById('dateDisplay').textContent = ''; return; }
+  const d = new Date(val);
+  const day = String(d.getDate()).padStart(2,'0');
+  const month = String(d.getMonth()+1).padStart(2,'0');
+  const year = d.getFullYear();
+  const formatted = `${day}.${month}.${year}`;
+  document.getElementById('dateDisplay').textContent = 'Document date: ' + formatted;
+  updatePreview();
 }
 
-function setAlign(elId, align, btn) {
-  applyStyle(elId, 'textAlign', align);
-  btn.closest('.align-btns').querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function getFormattedDate() {
+  const val = document.getElementById('effDatePicker').value;
+  if (!val) return '';
+  const d = new Date(val);
+  return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
 }
 
-function toggleBold(elId, btn) {
-  boldStates[elId] = !boldStates[elId];
-  applyStyle(elId, 'fontWeight', boldStates[elId] ? '700' : '400');
-  btn.classList.toggle('active', boldStates[elId]);
+/* ---- FILE NUMBER DROPDOWN ---- */
+function getFileNos() { return JSON.parse(localStorage.getItem('wr_filenos') || '[]'); }
+function saveFileNos(arr) { localStorage.setItem('wr_filenos', JSON.stringify(arr)); }
+
+function renderFileNoDropdown() {
+  const select = document.getElementById('fileNoSelect');
+  const nos = getFileNos();
+  select.innerHTML = '<option value="">-- Select or add new --</option>';
+  nos.forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    select.appendChild(opt);
+  });
 }
 
-function setTone(el, tone) {
-  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  activeTone = tone;
+function onFileNoSelect(val) {
+  document.getElementById('fileNo').value = val;
+  updatePreview();
 }
 
+function openFileNoModal() { document.getElementById('newFileNoInput').value=''; document.getElementById('fileNoModal').classList.add('open'); setTimeout(()=>document.getElementById('newFileNoInput').focus(),100); }
+function closeFileNoModal() { document.getElementById('fileNoModal').classList.remove('open'); }
+
+function confirmAddFileNo() {
+  const val = document.getElementById('newFileNoInput').value.trim();
+  if (!val) { alert('Please enter a file number.'); return; }
+  const nos = getFileNos();
+  if (!nos.includes(val)) { nos.push(val); saveFileNos(nos); }
+  renderFileNoDropdown();
+  document.getElementById('fileNoSelect').value = val;
+  document.getElementById('fileNo').value = val;
+  closeFileNoModal();
+  updatePreview();
+}
+
+/* ---- ADDRESSEES ---- */
 function addAddressee(val) {
   const list = document.getElementById('addresseeList');
   const row = document.createElement('div');
@@ -427,291 +546,341 @@ function addAddressee(val) {
   list.appendChild(row);
 }
 
-function clearAddressees() {
-  document.getElementById('addresseeList').innerHTML = '';
-  addAddressee('');
-}
+function clearAddressees() { document.getElementById('addresseeList').innerHTML=''; addAddressee(''); }
 
 function getAddressees() {
-  return Array.from(document.querySelectorAll('#addresseeList input'))
-    .map(i => i.value.trim()).filter(Boolean);
+  return Array.from(document.querySelectorAll('#addresseeList input')).map(i=>i.value.trim()).filter(Boolean);
 }
 
+/* ---- ADDR SETS ---- */
+function getAddrSets() { return JSON.parse(localStorage.getItem('wr_addr_sets')||'[]'); }
+function saveAddrSets(arr) { localStorage.setItem('wr_addr_sets', JSON.stringify(arr)); }
+
+function renderAddrSets() {
+  const sets = getAddrSets();
+  const bar = document.getElementById('addrSetsBar');
+  const empty = document.getElementById('addrSetsEmpty');
+  const chips = bar.querySelectorAll('.set-chip');
+  chips.forEach(c => c.remove());
+  if (sets.length === 0) { empty.style.display='inline'; return; }
+  empty.style.display = 'none';
+  sets.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'set-chip';
+    btn.textContent = s.name;
+    btn.title = 'Click to load, long press to delete';
+    btn.onclick = () => loadAddrSet(s);
+    btn.oncontextmenu = (e) => { e.preventDefault(); deleteAddrSet(s.id); };
+    bar.appendChild(btn);
+  });
+}
+
+function openAddrSetModal() {
+  if (!getAddressees().length) { alert('Please add at least one addressee first.'); return; }
+  document.getElementById('addrSetName').value='';
+  document.getElementById('addrSetModal').classList.add('open');
+  setTimeout(()=>document.getElementById('addrSetName').focus(),100);
+}
+function closeAddrSetModal() { document.getElementById('addrSetModal').classList.remove('open'); }
+
+function confirmSaveAddrSet() {
+  const name = document.getElementById('addrSetName').value.trim();
+  if (!name) { alert('Please enter a name.'); return; }
+  const sets = getAddrSets();
+  sets.unshift({ id: Date.now(), name, values: getAddressees() });
+  saveAddrSets(sets);
+  renderAddrSets();
+  closeAddrSetModal();
+  alert(`Addressee set "${name}" saved!`);
+}
+
+function loadAddrSet(s) {
+  document.getElementById('addresseeList').innerHTML='';
+  s.values.forEach(v => addAddressee(v));
+  updatePreview();
+}
+
+function deleteAddrSet(id) {
+  if (!confirm('Delete this addressee set?')) return;
+  saveAddrSets(getAddrSets().filter(s=>s.id!==id));
+  renderAddrSets();
+}
+
+/* ---- COPY TO SETS ---- */
+function getCopySets() { return JSON.parse(localStorage.getItem('wr_copy_sets')||'[]'); }
+function saveCopySets(arr) { localStorage.setItem('wr_copy_sets', JSON.stringify(arr)); }
+
+function renderCopySets() {
+  const sets = getCopySets();
+  const bar = document.getElementById('copySetsBar');
+  const empty = document.getElementById('copySetsEmpty');
+  const chips = bar.querySelectorAll('.set-chip');
+  chips.forEach(c => c.remove());
+  if (sets.length === 0) { empty.style.display='inline'; return; }
+  empty.style.display = 'none';
+  sets.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'set-chip';
+    btn.textContent = s.name;
+    btn.title = 'Click to load, long press to delete';
+    btn.onclick = () => { document.getElementById('copyTo').value = s.value; updatePreview(); };
+    btn.oncontextmenu = (e) => { e.preventDefault(); deleteCopySet(s.id); };
+    bar.appendChild(btn);
+  });
+}
+
+function openCopySetModal() {
+  if (!document.getElementById('copyTo').value.trim()) { alert('Please fill Copy To first.'); return; }
+  document.getElementById('copySetName').value='';
+  document.getElementById('copySetModal').classList.add('open');
+  setTimeout(()=>document.getElementById('copySetName').focus(),100);
+}
+function closeCopySetModal() { document.getElementById('copySetModal').classList.remove('open'); }
+
+function confirmSaveCopySet() {
+  const name = document.getElementById('copySetName').value.trim();
+  if (!name) { alert('Please enter a name.'); return; }
+  const sets = getCopySets();
+  sets.unshift({ id: Date.now(), name, value: document.getElementById('copyTo').value });
+  saveCopySets(sets);
+  renderCopySets();
+  closeCopySetModal();
+  alert(`Copy To set "${name}" saved!`);
+}
+
+function deleteCopySet(id) {
+  if (!confirm('Delete this Copy To set?')) return;
+  saveCopySets(getCopySets().filter(s=>s.id!==id));
+  renderCopySets();
+}
+
+/* ---- PREVIEW UPDATE ---- */
 function updatePreview() {
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val||''; };
-  const setH = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val||''; };
-  set('prev-fileNo', document.getElementById('fileNo').value || 'C&W/BCT/SK/2026/12');
-  set('prev-date', document.getElementById('effDate').value || 'As Signed');
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val||''; };
+  const setH = (id, val) => { const el=document.getElementById(id); if(el) el.innerHTML=val||''; };
+  set('prev-fileNo', document.getElementById('fileNo').value || '');
+  set('prev-date', getFormattedDate() || 'As Signed');
   const addrs = getAddressees();
-  setH('prev-addressees', addrs.length ? addrs.join('<br>') : 'All SSE/JE (C&W), BCT Division');
-  set('prev-subject', document.getElementById('subject').value || 'Subject here');
-  set('prev-ref', document.getElementById('reference').value || '—');
+  setH('prev-addressees', addrs.length ? addrs.join('<br>') : '');
+  set('prev-subject', document.getElementById('subject').value || '');
+  set('prev-ref', document.getElementById('reference').value || '');
   set('prev-sig-name', document.getElementById('signedBy').value || 'ADME (C&W)/BCT');
-  set('prev-sig-for', 'For '+(document.getElementById('forOfficer').value || 'Sr. DME (Co)/BCT'));
-  setH('prev-copy', (document.getElementById('copyTo').value||'').replace(/\n/g,'<br>')||'1.<br>2.');
+  set('prev-sig-for', 'For '+(document.getElementById('forOfficer').value||'Sr. DME (Co)/BCT'));
+  setH('prev-copy', (document.getElementById('copyTo').value||'').replace(/\n/g,'<br>'));
 }
 
-['fileNo','effDate','subject','reference','signedBy','forOfficer','copyTo'].forEach(id => {
+['fileNo','subject','reference','signedBy','forOfficer','copyTo'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updatePreview);
 });
+document.getElementById('copyTo').addEventListener('input', updatePreview);
 
+/* ---- LOAD EXAMPLE ---- */
 function loadExample() {
-  document.getElementById('fileNo').value = 'C&W/BCT/SK/2026/12';
-  document.getElementById('effDate').value = '18.03.2026';
+  document.getElementById('fileNoSelect').value='';
+  document.getElementById('fileNo').value='C&W/BCT/SK/2026/12';
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('effDatePicker').value = today;
+  onDateChange(today);
   clearAddressees();
   addAddressee('All SSE/JE (C&W), BCT Division');
   addAddressee('All JE (C&W), BCT Division');
-  document.getElementById('subject').value = 'Reduction of Sick Coaches — Daily Reporting';
-  document.getElementById('reference').value = 'HQ letter No. WR/C&W/2026/SK dated 10.03.2026';
-  document.getElementById('instructions').value = 'All SSEs in-charge of sick line are directed to ensure daily inspection and submission of sick coach report to ADME (C&W)/BCT by 08:00 hrs every morning. Non-compliance will be viewed seriously.';
-  document.getElementById('copyTo').value = '1. Sr. DME (C&W)/BCT\n2. ADME (G)/BCT\n3. Office file';
+  document.getElementById('subject').value='Reduction of Sick Coaches — Daily Reporting';
+  document.getElementById('reference').value='HQ letter No. WR/C&W/2026/SK dated 10.03.2026';
+  document.getElementById('instructions').value='All SSEs in-charge of sick line are directed to ensure daily inspection and submission of sick coach report to ADME (C&W)/BCT by 08:00 hrs every morning. Non-compliance will be viewed seriously.';
+  document.getElementById('copyTo').value='1. Sr. DME (C&W)/BCT\n2. ADME (G)/BCT\n3. Office file';
   updatePreview();
 }
 
 function clearForm() {
-  ['fileNo','effDate','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value='');
+  ['fileNo','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('fileNoSelect').value='';
+  document.getElementById('effDatePicker').value='';
+  document.getElementById('dateDisplay').textContent='';
   clearAddressees();
-  document.getElementById('status').textContent = '';
-  document.getElementById('actionBar').style.display = 'none';
+  document.getElementById('status').textContent='';
+  document.getElementById('actionBar').style.display='none';
 }
 
+/* ---- COPY & SHARE ---- */
 function copyText() {
-  const text = document.getElementById('bodytext').textContent;
-  navigator.clipboard.writeText(text).then(() => alert('Body text copied!'));
+  navigator.clipboard.writeText(document.getElementById('bodytext').textContent).then(()=>alert('Copied!'));
 }
 
 function shareWhatsApp() {
-  const fileNo   = document.getElementById('prev-fileNo').textContent;
-  const date     = document.getElementById('prev-date').textContent;
-  const subject  = document.getElementById('prev-subject').textContent;
-  const body     = document.getElementById('bodytext').textContent;
-  const sigName  = document.getElementById('prev-sig-name').textContent;
-  const sigFor   = document.getElementById('prev-sig-for').textContent;
-  const copyTo   = document.getElementById('copyTo').value;
-
   const text = `*Western Railway — BCT Division C&W*\n\n` +
-    `*No. M/${fileNo}*          Date: ${date}\n\n` +
-    `*Subject: ${subject}*\n\n` +
-    `${body}\n\n` +
-    `${sigName}\n${sigFor}\n\n` +
-    `*Copy to:*\n${copyTo}`;
-
-  const url = 'https://wa.me/?text=' + encodeURIComponent(text);
-  window.open(url, '_blank');
+    `*No. M/${document.getElementById('prev-fileNo').textContent}*   Date: ${document.getElementById('prev-date').textContent}\n\n` +
+    `*Subject: ${document.getElementById('prev-subject').textContent}*\n\n` +
+    `${document.getElementById('bodytext').textContent}\n\n` +
+    `${document.getElementById('prev-sig-name').textContent}\n${document.getElementById('prev-sig-for').textContent}\n\n` +
+    `*Copy to:*\n${document.getElementById('copyTo').value}`;
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
 
 async function downloadDocx() {
   const res = await fetch('/download', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
-      file_no:     document.getElementById('fileNo').value,
-      date:        document.getElementById('effDate').value,
-      addressees:  getAddressees(),
-      subject:     document.getElementById('subject').value,
-      reference:   document.getElementById('reference').value,
-      body:        document.getElementById('bodytext').textContent,
-      signed_by:   document.getElementById('signedBy').value,
+      file_no: document.getElementById('fileNo').value,
+      date: getFormattedDate(),
+      addressees: getAddressees(),
+      subject: document.getElementById('subject').value,
+      reference: document.getElementById('reference').value,
+      body: document.getElementById('bodytext').textContent,
+      signed_by: document.getElementById('signedBy').value,
       for_officer: document.getElementById('forOfficer').value,
-      copy_to:     document.getElementById('copyTo').value
+      copy_to: document.getElementById('copyTo').value
     })
   });
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'BCT_CW_Document.docx'; a.click();
+  const a = document.createElement('a'); a.href=url; a.download='BCT_CW_Document.docx'; a.click();
 }
 
 /* ---- TEMPLATES ---- */
-function getTemplates() {
-  return JSON.parse(localStorage.getItem('wr_templates') || '[]');
-}
-
-function saveTemplates(templates) {
-  localStorage.setItem('wr_templates', JSON.stringify(templates));
-}
-
-function openTplModal() {
-  document.getElementById('tplName').value = document.getElementById('subject').value || '';
-  document.getElementById('tplModal').classList.add('open');
-  setTimeout(() => document.getElementById('tplName').focus(), 100);
-}
-
-function closeTplModal() {
-  document.getElementById('tplModal').classList.remove('open');
-}
+function getTemplates() { return JSON.parse(localStorage.getItem('wr_templates')||'[]'); }
+function saveTemplates(t) { localStorage.setItem('wr_templates', JSON.stringify(t)); }
+function openTplModal() { document.getElementById('tplName').value=document.getElementById('subject').value||''; document.getElementById('tplModal').classList.add('open'); setTimeout(()=>document.getElementById('tplName').focus(),100); }
+function closeTplModal() { document.getElementById('tplModal').classList.remove('open'); }
 
 function confirmSaveTemplate() {
   const name = document.getElementById('tplName').value.trim();
-  if (!name) { alert('Please enter a template name.'); return; }
-
-  const template = {
-    id: Date.now(),
-    name: name,
-    savedOn: new Date().toLocaleDateString('en-IN'),
-    docType:      document.getElementById('docType').value,
-    fileNo:       document.getElementById('fileNo').value,
-    addressees:   getAddressees(),
-    subject:      document.getElementById('subject').value,
-    reference:    document.getElementById('reference').value,
+  if (!name) { alert('Please enter a name.'); return; }
+  const tpl = {
+    id: Date.now(), name, savedOn: new Date().toLocaleDateString('en-IN'),
+    docType: document.getElementById('docType').value,
+    fileNo: document.getElementById('fileNo').value,
+    addressees: getAddressees(),
+    subject: document.getElementById('subject').value,
+    reference: document.getElementById('reference').value,
     instructions: document.getElementById('instructions').value,
-    tone:         activeTone,
-    signedBy:     document.getElementById('signedBy').value,
-    forOfficer:   document.getElementById('forOfficer').value,
-    copyTo:       document.getElementById('copyTo').value
+    tone: activeTone,
+    signedBy: document.getElementById('signedBy').value,
+    forOfficer: document.getElementById('forOfficer').value,
+    copyTo: document.getElementById('copyTo').value
   };
-
-  const templates = getTemplates();
-  templates.unshift(template);
-  saveTemplates(templates);
-  closeTplModal();
-  alert('Template saved! Find it in the Templates tab.');
+  const templates = getTemplates(); templates.unshift(tpl); saveTemplates(templates);
+  closeTplModal(); alert('Template saved!');
 }
 
 function loadTemplate(id) {
-  const templates = getTemplates();
-  const tpl = templates.find(t => t.id === id);
-  if (!tpl) return;
-
-  document.getElementById('docType').value      = tpl.docType || 'Office Order';
-  document.getElementById('fileNo').value       = tpl.fileNo || '';
-  document.getElementById('subject').value      = tpl.subject || '';
-  document.getElementById('reference').value    = tpl.reference || '';
-  document.getElementById('instructions').value = tpl.instructions || '';
-  document.getElementById('signedBy').value     = tpl.signedBy || 'ADME (C&W)/BCT';
-  document.getElementById('forOfficer').value   = tpl.forOfficer || 'Sr. DME (Co)/BCT';
-  document.getElementById('copyTo').value       = tpl.copyTo || '';
-  document.getElementById('effDate').value      = '';
-
-  clearAddressees();
-  if (tpl.addressees && tpl.addressees.length) {
-    document.getElementById('addresseeList').innerHTML = '';
-    tpl.addressees.forEach(a => addAddressee(a));
-  }
-
-  document.querySelectorAll('.tone-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('onclick').includes(tpl.tone));
-  });
-  activeTone = tpl.tone || 'directive';
-
-  updatePreview();
-  showScreen('draft');
-  alert(`Template "${tpl.name}" loaded! Update the date and tap Generate Draft.`);
+  const tpl = getTemplates().find(t=>t.id===id); if (!tpl) return;
+  document.getElementById('docType').value = tpl.docType||'Office Order';
+  document.getElementById('fileNo').value = tpl.fileNo||'';
+  document.getElementById('subject').value = tpl.subject||'';
+  document.getElementById('reference').value = tpl.reference||'';
+  document.getElementById('instructions').value = tpl.instructions||'';
+  document.getElementById('signedBy').value = tpl.signedBy||'ADME (C&W)/BCT';
+  document.getElementById('forOfficer').value = tpl.forOfficer||'Sr. DME (Co)/BCT';
+  document.getElementById('copyTo').value = tpl.copyTo||'';
+  document.getElementById('effDatePicker').value='';
+  document.getElementById('dateDisplay').textContent='';
+  clearAddressees(); document.getElementById('addresseeList').innerHTML='';
+  if (tpl.addressees && tpl.addressees.length) tpl.addressees.forEach(a=>addAddressee(a));
+  else addAddressee('');
+  document.querySelectorAll('.tone-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick').includes(tpl.tone)));
+  activeTone = tpl.tone||'directive';
+  updatePreview(); showScreen('draft');
+  alert(`"${tpl.name}" loaded! Select date and tap Generate Draft.`);
 }
 
 function deleteTemplate(id) {
   if (!confirm('Delete this template?')) return;
-  const templates = getTemplates().filter(t => t.id !== id);
-  saveTemplates(templates);
-  renderTemplates();
+  saveTemplates(getTemplates().filter(t=>t.id!==id)); renderTemplates();
 }
 
 function renderTemplates() {
   const templates = getTemplates();
   const list = document.getElementById('tplList');
-  if (!templates.length) {
-    list.innerHTML = '<div class="tpl-empty">No templates saved yet. Draft a document and tap "Save Template" to save it here.</div>';
-    return;
-  }
-  list.innerHTML = templates.map(t => `
+  if (!templates.length) { list.innerHTML='<div class="tpl-empty">No templates yet. Draft a document and tap Save Template.</div>'; return; }
+  list.innerHTML = templates.map(t=>`
     <div class="tpl-item">
       <div class="tpl-name">${t.name}</div>
-      <div class="tpl-meta">${t.docType} &nbsp;|&nbsp; Saved: ${t.savedOn}</div>
+      <div class="tpl-meta">${t.docType} &nbsp;|&nbsp; ${t.savedOn}</div>
       <div class="tpl-btns">
-        <button class="tpl-load" onclick="loadTemplate(${t.id})">Load Template</button>
+        <button class="tpl-load" onclick="loadTemplate(${t.id})">Load</button>
         <button class="tpl-del" onclick="deleteTemplate(${t.id})">Delete</button>
       </div>
     </div>`).join('');
 }
 
-/* ---- STYLE SAVE/LOAD ---- */
+/* ---- STYLE ---- */
+function applyStyle(elId, prop, val) { const el=document.getElementById(elId); if(el) el.style[prop]=val; }
+function setAlign(elId, align, btn) { applyStyle(elId,'textAlign',align); btn.closest('.align-btns').querySelectorAll('.align-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function toggleBold(elId, btn) { boldStates[elId]=!boldStates[elId]; applyStyle(elId,'fontWeight',boldStates[elId]?'700':'400'); btn.classList.toggle('active',boldStates[elId]); }
+function setTone(el, tone) { document.querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); activeTone=tone; }
+
 function saveStyles() {
-  const styles = {};
-  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id => {
-    const slider = document.querySelector(`input[oninput*="${id}"]`);
-    const select = document.querySelector(`select[onchange*="${id}"]`);
-    if (slider) styles[id] = { fs: slider.value, ff: select ? select.value : '' };
+  const styles={};
+  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id=>{
+    const slider=document.querySelector(`input[oninput*="${id}"]`);
+    const select=document.querySelector(`select[onchange*="${id}"]`);
+    if(slider) styles[id]={fs:slider.value, ff:select?select.value:''};
   });
-  styles.boldStates = boldStates;
-  localStorage.setItem('wr_styles', JSON.stringify(styles));
+  styles.boldStates=boldStates;
+  localStorage.setItem('wr_styles',JSON.stringify(styles));
   alert('Styles saved!');
 }
 
 function loadSavedStyles() {
-  const saved = localStorage.getItem('wr_styles');
-  if (!saved) return;
-  const styles = JSON.parse(saved);
-  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id => {
-    if (!styles[id]) return;
-    const el = document.getElementById(id);
-    if (el) { el.style.fontSize = styles[id].fs+'px'; el.style.fontFamily = styles[id].ff; }
-    const slider = document.querySelector(`input[oninput*="${id}"]`);
-    if (slider) { slider.value = styles[id].fs; const sv = document.getElementById('sz-'+id); if(sv) sv.textContent = styles[id].fs+'px'; }
-    const select = document.querySelector(`select[onchange*="${id}"]`);
-    if (select && styles[id].ff) select.value = styles[id].ff;
+  const saved=localStorage.getItem('wr_styles'); if(!saved) return;
+  const styles=JSON.parse(saved);
+  ['lhHindi','lhEnglish','fileline','addressedTo','subjref','bodytext','sigBlock','copyBlock'].forEach(id=>{
+    if(!styles[id]) return;
+    const el=document.getElementById(id);
+    if(el){el.style.fontSize=styles[id].fs+'px';el.style.fontFamily=styles[id].ff;}
+    const slider=document.querySelector(`input[oninput*="${id}"]`);
+    if(slider){slider.value=styles[id].fs;const sv=document.getElementById('sz-'+id);if(sv)sv.textContent=styles[id].fs+'px';}
+    const sel=document.querySelector(`select[onchange*="${id}"]`);
+    if(sel&&styles[id].ff)sel.value=styles[id].ff;
   });
-  if (styles.boldStates) {
-    boldStates = styles.boldStates;
-    Object.keys(boldStates).forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.fontWeight = boldStates[id] ? '700' : '400';
-      const btnId = id === 'sigBlock' ? 'bold-sig' : 'bold-'+id;
-      const btn = document.getElementById(btnId);
-      if (btn) btn.classList.toggle('active', boldStates[id]);
+  if(styles.boldStates){
+    boldStates=styles.boldStates;
+    Object.keys(boldStates).forEach(id=>{
+      const el=document.getElementById(id); if(el) el.style.fontWeight=boldStates[id]?'700':'400';
+      const btnId=id==='sigBlock'?'bold-sig':'bold-'+id;
+      const btn=document.getElementById(btnId); if(btn) btn.classList.toggle('active',boldStates[id]);
     });
   }
 }
 
+/* ---- DRAFT ---- */
 async function draftDocument() {
-  const subject = document.getElementById('subject').value.trim();
-  const instructions = document.getElementById('instructions').value.trim();
-  if (!subject || !instructions) {
-    document.getElementById('status').textContent = 'Please fill Subject and Instructions.';
-    return;
-  }
+  const subject=document.getElementById('subject').value.trim();
+  const instructions=document.getElementById('instructions').value.trim();
+  if(!subject||!instructions){document.getElementById('status').textContent='Please fill Subject and Instructions.';return;}
   updatePreview();
-  const btn = document.getElementById('draftBtn');
-  const status = document.getElementById('status');
-  btn.disabled = true;
-  btn.textContent = 'Generating...';
-  status.textContent = 'Please wait, drafting your document...';
-
+  const btn=document.getElementById('draftBtn'); const status=document.getElementById('status');
+  btn.disabled=true; btn.textContent='Generating...'; status.textContent='Please wait...';
   try {
-    const res = await fetch('/draft', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        doc_type:     document.getElementById('docType').value,
-        file_no:      document.getElementById('fileNo').value,
-        subject:      subject,
-        reference:    document.getElementById('reference').value,
-        instructions: instructions,
-        addressees:   getAddressees(),
-        eff_date:     document.getElementById('effDate').value,
-        tone:         activeTone,
-        signed_by:    document.getElementById('signedBy').value,
-        for_officer:  document.getElementById('forOfficer').value,
-        copy_to:      document.getElementById('copyTo').value
-      })
-    });
-    const data = await res.json();
-    if (data.error) {
-      status.textContent = 'Error: ' + data.error;
-    } else {
-      document.getElementById('bodytext').textContent = data.text;
-      document.getElementById('actionBar').style.display = 'flex';
-      status.textContent = 'Done! Tap Preview to see your document.';
+    const res=await fetch('/draft',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        doc_type:document.getElementById('docType').value,
+        file_no:document.getElementById('fileNo').value,
+        subject,reference:document.getElementById('reference').value,
+        instructions,addressees:getAddressees(),
+        eff_date:getFormattedDate(),tone:activeTone,
+        signed_by:document.getElementById('signedBy').value,
+        for_officer:document.getElementById('forOfficer').value,
+        copy_to:document.getElementById('copyTo').value
+      })});
+    const data=await res.json();
+    if(data.error){status.textContent='Error: '+data.error;}
+    else{
+      document.getElementById('bodytext').textContent=data.text;
+      document.getElementById('actionBar').style.display='flex';
+      status.textContent='Done! Tap Preview tab to see your document.';
       showScreen('preview');
     }
-  } catch(e) {
-    status.textContent = 'Cannot connect. Make sure app is running.';
-  }
-  btn.disabled = false;
-  btn.textContent = 'Generate Draft';
+  } catch(e){status.textContent='Cannot connect. Make sure app is running.';}
+  btn.disabled=false; btn.textContent='Generate Draft';
 }
 
+/* ---- INIT ---- */
 clearAddressees();
+renderFileNoDropdown();
+renderAddrSets();
+renderCopySets();
 loadSavedStyles();
 updatePreview();
 </script>
