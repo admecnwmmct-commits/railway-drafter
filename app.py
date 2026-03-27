@@ -28,10 +28,10 @@ def draft():
     data         = request.json
     doc_type     = data.get('doc_type', 'Office Order')
     subject      = data.get('subject', '')
-    reference    = data.get('reference', '')
+    references   = data.get('references', [])
+    enclosures   = data.get('enclosures', [])
     instructions = data.get('instructions', '')
-    addr_list    = data.get('addressees', ['All Concerned'])
-    addressees   = ', '.join(addr_list) if isinstance(addr_list, list) else addr_list
+    addressees   = data.get('addressees', ['All Concerned'])
     authority    = data.get('for_officer', 'Sr. DME (Co)/BCT')
     tone         = data.get('tone', 'directive')
 
@@ -42,15 +42,19 @@ def draft():
         'reminder':      'This is a reminder. Reference earlier instructions and state compliance is still awaited.'
     }
 
+    addr_str = ', '.join(addressees) if isinstance(addressees, list) else addressees
+    ref_str  = '; '.join(references) if references else 'None'
+
     prompt = f"""You are a senior Indian Railways officer in the C&W section of BCT Division, Western Railway.
 
 Your task is to write ONLY the numbered body paragraphs of a {doc_type}.
 
 STRICT RULES:
 - Write ONLY the numbered paragraphs (1., 2., 2.1 etc.)
-- Do NOT include file number, date, subject line, reference line at the top
+- Do NOT include file number, date, subject line, reference lines at the top
 - Do NOT include signature block at the end
 - Do NOT include Copy to section at the end
+- Do NOT include Enclosures at the end
 - Do NOT write any heading or title
 - Start directly with paragraph 1.
 - End with the approval paragraph only (e.g. "3. This issues with the approval of {authority}.")
@@ -58,9 +62,9 @@ STRICT RULES:
 Document details:
 - Type: {doc_type}
 - Subject: {subject}
-- Reference: {reference}
+- References: {ref_str}
 - Instructions to cover: {instructions}
-- Addressed to: {addressees}
+- Addressed to: {addr_str}
 - Tone: {tone_guide.get(tone, tone_guide['directive'])}
 
 Write only the numbered body paragraphs now:"""
@@ -81,32 +85,32 @@ def download():
     data       = request.json
     file_no    = data.get('file_no', '')
     date       = data.get('date', '')
-    addr_raw   = data.get('addressees', '')
-    addressees = addr_raw if isinstance(addr_raw, str) else addr_raw
+    addressees = data.get('addressees', '')
     subject    = data.get('subject', '')
-    reference  = data.get('reference', '')
+    references = data.get('references', [])
+    enclosures = data.get('enclosures', [])
     body       = data.get('body', '')
     signed_by  = data.get('signed_by', 'ADME (C&W)/BCT')
     for_off    = data.get('for_officer', 'Sr. DME (Co)/BCT')
     copy_to    = data.get('copy_to', '')
 
+    roman = ['i','ii','iii','iv','v','vi','vii','viii','ix','x']
+
     doc = Document()
 
-    # Page margins
     for section in doc.sections:
         section.top_margin    = Inches(0.8)
         section.bottom_margin = Inches(0.8)
         section.left_margin   = Inches(1.0)
         section.right_margin  = Inches(1.0)
 
-    # Header table with logos and title
+    # Header table with logos
     header_table = doc.add_table(rows=1, cols=3)
     header_table.autofit = False
     header_table.columns[0].width = Inches(1.2)
     header_table.columns[1].width = Inches(4.1)
     header_table.columns[2].width = Inches(1.2)
 
-    # Left logo
     left_cell = header_table.cell(0, 0)
     left_para = left_cell.paragraphs[0]
     left_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -116,7 +120,6 @@ def download():
     except:
         left_para.add_run('WR')
 
-    # Center text
     center_cell = header_table.cell(0, 1)
     center_cell.paragraphs[0].clear()
 
@@ -136,7 +139,6 @@ def download():
     p_addr.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_addr.runs[0].font.size = Pt(9)
 
-    # Right logo
     right_cell = header_table.cell(0, 2)
     right_para = right_cell.paragraphs[0]
     right_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -159,12 +161,9 @@ def download():
 
     doc.add_paragraph('')
 
-    # Addressed To — split by || and put each on separate line
+    # Addressed To — each on separate line
     if addressees:
-        if isinstance(addressees, list):
-            addr_lines = [a.strip() for a in addressees if a.strip()]
-        else:
-            addr_lines = [a.strip() for a in addressees.split('||') if a.strip()]
+        addr_lines = addressees if isinstance(addressees, list) else [a.strip() for a in addressees.split('||') if a.strip()]
         for addr_line in addr_lines:
             p_to = doc.add_paragraph()
             p_to.add_run(addr_line).font.size = Pt(11)
@@ -177,11 +176,14 @@ def download():
     run_sub.font.size = Pt(11)
     run_sub.font.bold = True
 
-    # Reference
-    if reference:
+    # References — Ref.(i), Ref.(ii) etc.
+    if len(references) == 1:
         p_ref = doc.add_paragraph()
-        run_ref = p_ref.add_run(f'Reference: {reference}')
-        run_ref.font.size = Pt(11)
+        p_ref.add_run(f'Reference: {references[0]}').font.size = Pt(11)
+    elif len(references) > 1:
+        for idx, ref in enumerate(references):
+            p_ref = doc.add_paragraph()
+            p_ref.add_run(f'Ref.({roman[idx] if idx < len(roman) else idx+1}): {ref}').font.size = Pt(11)
 
     doc.add_paragraph('')
 
@@ -201,13 +203,19 @@ def download():
     # Signature
     p_sig1 = doc.add_paragraph()
     r1 = p_sig1.add_run(signed_by)
-    r1.font.size = Pt(11)
-    r1.font.bold = True
+    r1.font.size = Pt(11); r1.font.bold = True
 
     p_sig2 = doc.add_paragraph()
     r2 = p_sig2.add_run(f'For {for_off}')
-    r2.font.size = Pt(11)
-    r2.font.bold = True
+    r2.font.size = Pt(11); r2.font.bold = True
+
+    # Enclosures
+    if enclosures:
+        doc.add_paragraph('')
+        for idx, encl in enumerate(enclosures):
+            p_encl = doc.add_paragraph()
+            label = f'Encl.({idx+1}): ' if len(enclosures) > 1 else 'Encl.: '
+            p_encl.add_run(label + encl).font.size = Pt(11)
 
     doc.add_paragraph('')
 
@@ -215,14 +223,12 @@ def download():
     if copy_to:
         p_ct = doc.add_paragraph()
         r = p_ct.add_run('Copy to:')
-        r.font.size = Pt(11)
-        r.font.bold = True
+        r.font.size = Pt(11); r.font.bold = True
         for line in copy_to.split('\n'):
             if line.strip():
                 p_copy = doc.add_paragraph()
                 p_copy.add_run(line.strip()).font.size = Pt(11)
 
-    # Save to buffer
     buffer = io.BytesIO()
     doc.save(buffer)
     buffer.seek(0)

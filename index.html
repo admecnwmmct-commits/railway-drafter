@@ -250,10 +250,18 @@
         <input type="text" id="subject" placeholder="e.g. Reduction of Sick Coaches" />
       </div>
 
-      <!-- REFERENCE -->
+      <!-- REFERENCES — multiple -->
       <div class="form-field">
-        <label>Reference (if any)</label>
-        <input type="text" id="reference" placeholder="e.g. HQ letter No. WR/C&W/2026" />
+        <label>References</label>
+        <div id="referenceList"></div>
+        <button class="add-addr-btn" onclick="addReference()">+ Add Reference</button>
+      </div>
+
+      <!-- ENCLOSURES -->
+      <div class="form-field">
+        <label>Enclosures (if any)</label>
+        <div id="enclosureList"></div>
+        <button class="add-addr-btn" onclick="addEnclosure()">+ Add Enclosure</button>
       </div>
 
       <!-- INSTRUCTIONS -->
@@ -333,12 +341,15 @@
           </div>
           <div id="subjref" style="font-size:12px;font-weight:700;font-family:'Times New Roman',serif;margin-bottom:14px;">
             <div>Subject: <span id="prev-subject"></span></div>
-            <div style="font-weight:normal;margin-top:4px;">Reference: <span id="prev-ref"></span></div>
+            <div id="prev-refs-block" style="font-weight:normal;margin-top:4px;"></div>
           </div>
           <div id="bodytext" class="lh-body-text" style="font-size:12px;font-family:'Times New Roman',serif;">Tap Generate Draft to create your document.</div>
           <div id="sigBlock" style="font-size:12px;font-weight:700;font-family:'Times New Roman',serif;margin-top:24px;">
             <div id="prev-sig-name">ADME (C&W)/BCT</div>
             <div id="prev-sig-for">For Sr. DME (Co)/BCT</div>
+          </div>
+          <div id="enclosureBlock" style="font-size:11px;font-family:'Times New Roman',serif;margin-top:12px;display:none;">
+            <div id="prev-enclosures"></div>
           </div>
           <div id="copyBlock" style="font-size:11px;font-family:'Times New Roman',serif;margin-top:16px;padding-top:10px;">
             <div style="font-weight:700;margin-bottom:4px;">Copy to:</div>
@@ -663,13 +674,72 @@ function updatePreview() {
   const addrs = getAddressees();
   setH('prev-addressees', addrs.length ? addrs.join('<br>') : '');
   set('prev-subject', document.getElementById('subject').value || '');
-  set('prev-ref', document.getElementById('reference').value || '');
+
+  // Multiple references — show as Ref.(i), Ref.(ii) etc.
+  const refs = getReferences();
+  const refsBlock = document.getElementById('prev-refs-block');
+  if (refs.length === 0) {
+    refsBlock.innerHTML = '';
+  } else if (refs.length === 1) {
+    refsBlock.innerHTML = `Reference: ${refs[0]}`;
+  } else {
+    const roman = ['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
+    refsBlock.innerHTML = refs.map((r,i) => `Ref.(${roman[i] || i+1}): ${r}`).join('<br>');
+  }
+
+  // Enclosures
+  const encls = getEnclosures();
+  const enclBlock = document.getElementById('enclosureBlock');
+  const enclPrev = document.getElementById('prev-enclosures');
+  if (encls.length === 0) {
+    enclBlock.style.display = 'none';
+    enclPrev.innerHTML = '';
+  } else {
+    enclBlock.style.display = 'block';
+    enclPrev.innerHTML = encls.map((e,i) => `Encl.${encls.length>1 ? ' ('+(i+1)+')' : ''}: ${e}`).join('<br>');
+  }
+
   set('prev-sig-name', document.getElementById('signedBy').value || 'ADME (C&W)/BCT');
   set('prev-sig-for', 'For '+(document.getElementById('forOfficer').value||'Sr. DME (Co)/BCT'));
   setH('prev-copy', (document.getElementById('copyTo').value||'').replace(/\n/g,'<br>'));
 }
 
-['fileNo','subject','reference','signedBy','forOfficer','copyTo'].forEach(id => {
+/* ---- REFERENCES ---- */
+function addReference(val) {
+  const list = document.getElementById('referenceList');
+  const num = list.children.length + 1;
+  const row = document.createElement('div');
+  row.className = 'addr-row';
+  row.innerHTML = `<input type="text" value="${val||''}" placeholder="e.g. HQ letter No. WR/C&W/2026 dated 10.03.2026" oninput="updatePreview()">
+    <button class="addr-remove" onclick="this.parentElement.remove();updatePreview();">&#215;</button>`;
+  list.appendChild(row);
+  updatePreview();
+}
+
+function clearReferences() { document.getElementById('referenceList').innerHTML=''; }
+
+function getReferences() {
+  return Array.from(document.querySelectorAll('#referenceList input')).map(i=>i.value.trim()).filter(Boolean);
+}
+
+/* ---- ENCLOSURES ---- */
+function addEnclosure(val) {
+  const list = document.getElementById('enclosureList');
+  const row = document.createElement('div');
+  row.className = 'addr-row';
+  row.innerHTML = `<input type="text" value="${val||''}" placeholder="e.g. Copy of HQ letter dated 10.03.2026" oninput="updatePreview()">
+    <button class="addr-remove" onclick="this.parentElement.remove();updatePreview();">&#215;</button>`;
+  list.appendChild(row);
+  updatePreview();
+}
+
+function clearEnclosures() { document.getElementById('enclosureList').innerHTML=''; }
+
+function getEnclosures() {
+  return Array.from(document.querySelectorAll('#enclosureList input')).map(i=>i.value.trim()).filter(Boolean);
+}
+
+['fileNo','subject','signedBy','forOfficer','copyTo'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updatePreview);
 });
@@ -686,18 +756,24 @@ function loadExample() {
   addAddressee('All SSE/JE (C&W), BCT Division');
   addAddressee('All JE (C&W), BCT Division');
   document.getElementById('subject').value='Reduction of Sick Coaches — Daily Reporting';
-  document.getElementById('reference').value='HQ letter No. WR/C&W/2026/SK dated 10.03.2026';
+  clearReferences();
+  addReference('HQ letter No. WR/C&W/2026/SK dated 10.03.2026');
+  addReference('Railway Board letter No. RB/C&W/2025/Policy dated 01.01.2026');
+  clearEnclosures();
+  addEnclosure('Copy of HQ letter No. WR/C&W/2026/SK dated 10.03.2026');
   document.getElementById('instructions').value='All SSEs in-charge of sick line are directed to ensure daily inspection and submission of sick coach report to ADME (C&W)/BCT by 08:00 hrs every morning. Non-compliance will be viewed seriously.';
   document.getElementById('copyTo').value='1. Sr. DME (C&W)/BCT\n2. ADME (G)/BCT\n3. Office file';
   updatePreview();
 }
 
 function clearForm() {
-  ['fileNo','subject','reference','instructions','copyTo'].forEach(id => document.getElementById(id).value='');
+  ['fileNo','subject','instructions','copyTo'].forEach(id => document.getElementById(id).value='');
   document.getElementById('fileNoSelect').value='';
   document.getElementById('effDatePicker').value='';
   document.getElementById('dateDisplay').textContent='';
   clearAddressees();
+  clearReferences();
+  clearEnclosures();
   document.getElementById('status').textContent='';
   document.getElementById('actionBar').style.display='none';
 }
@@ -725,7 +801,8 @@ async function downloadDocx() {
       date: getFormattedDate(),
       addressees: getAddressees(),
       subject: document.getElementById('subject').value,
-      reference: document.getElementById('reference').value,
+      references: getReferences(),
+      enclosures: getEnclosures(),
       body: document.getElementById('bodytext').textContent,
       signed_by: document.getElementById('signedBy').value,
       for_officer: document.getElementById('forOfficer').value,
@@ -752,7 +829,8 @@ function confirmSaveTemplate() {
     fileNo: document.getElementById('fileNo').value,
     addressees: getAddressees(),
     subject: document.getElementById('subject').value,
-    reference: document.getElementById('reference').value,
+    references: getReferences(),
+    enclosures: getEnclosures(),
     instructions: document.getElementById('instructions').value,
     tone: activeTone,
     signedBy: document.getElementById('signedBy').value,
@@ -768,7 +846,6 @@ function loadTemplate(id) {
   document.getElementById('docType').value = tpl.docType||'Office Order';
   document.getElementById('fileNo').value = tpl.fileNo||'';
   document.getElementById('subject').value = tpl.subject||'';
-  document.getElementById('reference').value = tpl.reference||'';
   document.getElementById('instructions').value = tpl.instructions||'';
   document.getElementById('signedBy').value = tpl.signedBy||'ADME (C&W)/BCT';
   document.getElementById('forOfficer').value = tpl.forOfficer||'Sr. DME (Co)/BCT';
@@ -778,6 +855,10 @@ function loadTemplate(id) {
   clearAddressees(); document.getElementById('addresseeList').innerHTML='';
   if (tpl.addressees && tpl.addressees.length) tpl.addressees.forEach(a=>addAddressee(a));
   else addAddressee('');
+  clearReferences();
+  if (tpl.references && tpl.references.length) tpl.references.forEach(r=>addReference(r));
+  clearEnclosures();
+  if (tpl.enclosures && tpl.enclosures.length) tpl.enclosures.forEach(e=>addEnclosure(e));
   document.querySelectorAll('.tone-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick').includes(tpl.tone)));
   activeTone = tpl.tone||'directive';
   updatePreview(); showScreen('draft');
@@ -857,7 +938,8 @@ async function draftDocument() {
       body:JSON.stringify({
         doc_type:document.getElementById('docType').value,
         file_no:document.getElementById('fileNo').value,
-        subject,reference:document.getElementById('reference').value,
+        subject,references:getReferences(),
+        enclosures:getEnclosures(),
         instructions,addressees:getAddressees(),
         eff_date:getFormattedDate(),tone:activeTone,
         signed_by:document.getElementById('signedBy').value,
@@ -878,6 +960,8 @@ async function draftDocument() {
 
 /* ---- INIT ---- */
 clearAddressees();
+clearReferences();
+clearEnclosures();
 renderFileNoDropdown();
 renderAddrSets();
 renderCopySets();
