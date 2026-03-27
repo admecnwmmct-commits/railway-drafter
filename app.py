@@ -23,6 +23,62 @@ def logo1():
 def logo2():
     return send_from_directory('.', 'logo2.jpeg')
 
+
+FORMAT_GUIDES = {
+    "Office Order": """
+FORMAT: Office Order
+- Opening: Start with "It is hereby ordered that..." OR "In exercise of the powers vested..."
+- Use numbered paragraphs: 1., 2., 2.1, 2.2 etc.
+- Language: Firm and directive. Third person throughout.
+- Closing paragraph: "This issues with the approval of {authority}."
+- Do NOT use "I" or personal pronouns.
+- Example opening: "1. It is hereby ordered that all SSEs in-charge of sick line are directed to..."
+""",
+
+    "Office Memorandum": """
+FORMAT: Office Memorandum (OM)
+- Opening: Start with "The undersigned is directed to refer to..." OR "Attention is invited to..."
+- Use numbered paragraphs: 1., 2., 2.1 etc.
+- Language: Formal but communicative. Written as if from the office, not an individual.
+- Closing paragraph: "This issues with the approval of {authority}."
+- Do NOT use "I". Use "the undersigned" if referring to the writer.
+- Example opening: "1. The undersigned is directed to refer to the subject cited above and to state that..."
+""",
+
+    "Circular": """
+FORMAT: Circular
+- Opening: Start with "Attention of all concerned is invited to..." OR "It has been observed that..." OR "Reference is invited to..."
+- Use numbered paragraphs: 1., 2., 2.1 etc.
+- Language: Informative and guidance-oriented. Addressed to a wide audience.
+- Closing paragraph: "This circular issues with the approval of {authority}."
+- May include sub-points as (a), (b), (c) under main paragraphs.
+- Example opening: "1. Attention of all concerned is invited to the instructions contained in..."
+""",
+
+    "DO Letter": """
+FORMAT: Demi Official (DO) Letter
+- Opening: Start with "Dear [Designation]," on a new line, then begin the body.
+- Do NOT use numbered paragraphs. Write in flowing prose paragraphs.
+- Language: Semi-personal, formal but direct. Use "I" — written personally by the officer.
+- Closing: End with "Yours sincerely," on a new line.
+- Do NOT include "This issues with approval of..." — this is a personal letter.
+- Keep it concise — typically 2-3 paragraphs only.
+- Example opening: "Dear Sri/Smt [Name],\n\nI am writing to bring to your attention the matter of..."
+""",
+
+    "UO Note": """
+FORMAT: Unofficial Note (UO Note)
+- Opening: Start directly with the subject matter — no "To" address, no formal opening salutation.
+- Do NOT use numbered paragraphs. Write as a brief internal note.
+- Language: Brief, factual, and to the point. Used for internal departmental communication only.
+- Closing: Simply end with the action requested or information conveyed. No formal closing line.
+- Do NOT include "This issues with approval of..." — this is an internal note.
+- Keep it very brief — typically 1-2 short paragraphs only.
+- Example opening: "The matter regarding [subject] is brought to the notice of [department/officer]..."
+"""
+}
+
+
 @app.route('/draft', methods=['POST'])
 def draft():
     data         = request.json
@@ -36,38 +92,39 @@ def draft():
     tone         = data.get('tone', 'directive')
 
     tone_guide = {
-        'directive':     'Use firm directive language. Use phrases like "it is hereby ordered", "all concerned are directed to".',
-        'advisory':      'Use advisory language. Use phrases like "it is advised", "staff may note".',
-        'clarificatory': 'This is a clarification. Use phrases like "it is clarified that", "doubts have been raised regarding".',
-        'reminder':      'This is a reminder. Reference earlier instructions and state compliance is still awaited.'
+        'directive':     'Use firm directive language.',
+        'advisory':      'Use advisory, guidance-oriented language.',
+        'clarificatory': 'This is a clarification of existing rules or instructions.',
+        'reminder':      'This is a reminder/follow-up. Earlier instructions have not been complied with.'
     }
 
     addr_str = ', '.join(addressees) if isinstance(addressees, list) else addressees
     ref_str  = '; '.join(references) if references else 'None'
+    fmt      = FORMAT_GUIDES.get(doc_type, FORMAT_GUIDES["Office Order"]).format(authority=authority)
 
-    prompt = f"""You are a senior Indian Railways officer in the C&W section of BCT Division, Western Railway.
+    prompt = f"""You are a senior Indian Railways officer in the C&W section of BCT Division, Western Railway, with 30 years of experience drafting official correspondence.
 
-Your task is to write ONLY the numbered body paragraphs of a {doc_type}.
+Your task is to write ONLY the body content of a {doc_type}.
+
+{fmt}
 
 STRICT RULES:
-- Write ONLY the numbered paragraphs (1., 2., 2.1 etc.)
+- Write ONLY the body content as described in the format above
 - Do NOT include file number, date, subject line, reference lines at the top
-- Do NOT include signature block at the end
-- Do NOT include Copy to section at the end
-- Do NOT include Enclosures at the end
-- Do NOT write any heading or title
-- Start directly with paragraph 1.
-- End with the approval paragraph only (e.g. "3. This issues with the approval of {authority}.")
+- Do NOT include signature block or designation at the end (except "Yours sincerely," for DO Letter)
+- Do NOT include Copy to section
+- Do NOT include Enclosures section
+- Do NOT write any heading or title before the body
 
 Document details:
-- Type: {doc_type}
 - Subject: {subject}
 - References: {ref_str}
-- Instructions to cover: {instructions}
+- Key instructions to convey: {instructions}
 - Addressed to: {addr_str}
+- Approving authority: {authority}
 - Tone: {tone_guide.get(tone, tone_guide['directive'])}
 
-Write only the numbered body paragraphs now:"""
+Write the body content now:"""
 
     try:
         response = client.chat.completions.create(
@@ -93,6 +150,7 @@ def download():
     signed_by  = data.get('signed_by', 'ADME (C&W)/BCT')
     for_off    = data.get('for_officer', 'Sr. DME (Co)/BCT')
     copy_to    = data.get('copy_to', '')
+    doc_type   = data.get('doc_type', 'Office Order')
 
     roman = ['i','ii','iii','iv','v','vi','vii','viii','ix','x']
 
@@ -135,9 +193,9 @@ def download():
     p_div.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_div.runs[0].font.size = Pt(11)
 
-    p_addr = center_cell.add_paragraph('मुंबई सेंट्रल, मुंबई–400008  |  Mumbai Central, Mumbai-400008')
-    p_addr.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_addr.runs[0].font.size = Pt(9)
+    p_addr_lh = center_cell.add_paragraph('मुंबई सेंट्रल, मुंबई–400008  |  Mumbai Central, Mumbai-400008')
+    p_addr_lh.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_addr_lh.runs[0].font.size = Pt(9)
 
     right_cell = header_table.cell(0, 2)
     right_para = right_cell.paragraphs[0]
@@ -153,30 +211,27 @@ def download():
     # File No and Date
     p_file = doc.add_paragraph()
     run_no = p_file.add_run(f'No. M/{file_no}')
-    run_no.font.size = Pt(11)
-    run_no.font.bold = True
+    run_no.font.size = Pt(11); run_no.font.bold = True
     p_file.add_run('\t\t\t\t\t')
     run_date = p_file.add_run(f'Date: {date}')
     run_date.font.size = Pt(11)
 
     doc.add_paragraph('')
 
-    # Addressed To — each on separate line
-    if addressees:
+    # Addressed To — skip for UO Note
+    if doc_type != 'UO Note' and addressees:
         addr_lines = addressees if isinstance(addressees, list) else [a.strip() for a in addressees.split('||') if a.strip()]
         for addr_line in addr_lines:
             p_to = doc.add_paragraph()
             p_to.add_run(addr_line).font.size = Pt(11)
-
-    doc.add_paragraph('')
+        doc.add_paragraph('')
 
     # Subject
     p_sub = doc.add_paragraph()
     run_sub = p_sub.add_run(f'Subject: {subject}')
-    run_sub.font.size = Pt(11)
-    run_sub.font.bold = True
+    run_sub.font.size = Pt(11); run_sub.font.bold = True
 
-    # References — Ref.(i), Ref.(ii) etc.
+    # References
     if len(references) == 1:
         p_ref = doc.add_paragraph()
         p_ref.add_run(f'Reference: {references[0]}').font.size = Pt(11)
@@ -200,14 +255,22 @@ def download():
     doc.add_paragraph('')
     doc.add_paragraph('')
 
-    # Signature
+    # Signature — DO Letter uses "Yours sincerely"
+    if doc_type == 'DO Letter':
+        p_sig0 = doc.add_paragraph()
+        p_sig0.add_run('Yours sincerely,').font.size = Pt(11)
+        doc.add_paragraph('')
+        doc.add_paragraph('')
+
     p_sig1 = doc.add_paragraph()
     r1 = p_sig1.add_run(signed_by)
     r1.font.size = Pt(11); r1.font.bold = True
 
-    p_sig2 = doc.add_paragraph()
-    r2 = p_sig2.add_run(f'For {for_off}')
-    r2.font.size = Pt(11); r2.font.bold = True
+    # For officer line — not needed for DO Letter and UO Note
+    if doc_type not in ['DO Letter', 'UO Note']:
+        p_sig2 = doc.add_paragraph()
+        r2 = p_sig2.add_run(f'For {for_off}')
+        r2.font.size = Pt(11); r2.font.bold = True
 
     # Enclosures
     if enclosures:
@@ -219,8 +282,8 @@ def download():
 
     doc.add_paragraph('')
 
-    # Copy To
-    if copy_to:
+    # Copy To — not for UO Note and DO Letter typically
+    if copy_to and doc_type not in ['UO Note']:
         p_ct = doc.add_paragraph()
         r = p_ct.add_run('Copy to:')
         r.font.size = Pt(11); r.font.bold = True
