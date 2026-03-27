@@ -100,7 +100,8 @@ def draft():
 
     addr_str = ', '.join(addressees) if isinstance(addressees, list) else addressees
     ref_str  = '; '.join(references) if references else 'None'
-    fmt      = FORMAT_GUIDES.get(doc_type, FORMAT_GUIDES["Office Order"]).format(authority=authority)
+    custom_fmt = data.get('custom_format', '')
+    fmt      = (custom_fmt if custom_fmt else FORMAT_GUIDES.get(doc_type, FORMAT_GUIDES["Office Order"])).format(authority=authority)
 
     prompt = f"""You are a senior Indian Railways officer in the C&W section of BCT Division, Western Railway, with 30 years of experience drafting official correspondence.
 

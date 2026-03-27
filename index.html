@@ -453,6 +453,44 @@
     <button class="save-style-btn" onclick="saveStyles()">Save Style Settings</button>
   </div>
 
+
+  <!-- FORMAT EDITOR SCREEN -->
+  <div class="screen" id="screen-format">
+    <div class="card">
+      <div class="card-title">Format Editor</div>
+      <p style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;">Edit the AI writing instructions for each document type. Changes are saved permanently in your browser.</p>
+      <div class="form-field">
+        <label>Document Type</label>
+        <select id="formatDocType" onchange="loadFormatEditor(this.value)">
+          <option value="Office Order">Office Order</option>
+          <option value="Office Memorandum">Office Memorandum (OM)</option>
+          <option value="Circular">Circular</option>
+          <option value="DO Letter">DO Letter</option>
+          <option value="UO Note">UO Note</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Format Instructions for AI</label>
+        <textarea id="formatInstructions" rows="12" style="font-family:monospace;font-size:13px;" placeholder="Enter format instructions..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button class="sec-btn" style="flex:1;" onclick="resetFormat()">Reset to Default</button>
+        <button class="draft-btn" style="flex:1;margin:0;padding:10px;" onclick="saveFormat()">Save Format</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;text-align:center;margin-top:8px;">Use {authority} as placeholder — replaced with actual approving officer name when drafting.</p>
+    </div>
+    <div class="card" style="background:#fff8e8;border-color:#f0a500;">
+      <div style="font-size:13px;font-weight:700;color:#854F0B;margin-bottom:8px;">How to customize</div>
+      <div style="font-size:12px;color:#633806;line-height:1.8;">
+        <b>Opening line:</b> Tell AI how to start the document<br>
+        <b>Paragraph style:</b> Numbered / flowing prose<br>
+        <b>Language:</b> First person / third person<br>
+        <b>Closing line:</b> What the last line should say<br>
+        <b>{authority}:</b> Replaced with actual officer name
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- BOTTOM NAV -->
@@ -472,6 +510,9 @@
   <button class="nav-btn" id="nav-style" onclick="showScreen('style')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v2M12 2v2"/></svg>
     Style<div class="nav-indicator"></div>
+  <button class="nav-btn" id="nav-format" onclick="showScreen('format');loadFormatEditor(document.getElementById('formatDocType').value)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Format<div class="nav-indicator"></div>
   </button>
 </nav>
 
@@ -944,7 +985,8 @@ async function draftDocument() {
         eff_date:getFormattedDate(),tone:activeTone,
         signed_by:document.getElementById('signedBy').value,
         for_officer:document.getElementById('forOfficer').value,
-        copy_to:document.getElementById('copyTo').value
+        copy_to:document.getElementById('copyTo').value,
+        custom_format:getFormatForType(document.getElementById('docType').value)
       })});
     const data=await res.json();
     if(data.error){status.textContent='Error: '+data.error;}
@@ -956,6 +998,82 @@ async function draftDocument() {
     }
   } catch(e){status.textContent='Cannot connect. Make sure app is running.';}
   btn.disabled=false; btn.textContent='Generate Draft';
+}
+
+/* ---- FORMAT EDITOR ---- */
+const DEFAULT_FORMATS = {
+  "Office Order": `FORMAT: Office Order
+- Opening: Start with "It is hereby ordered that..." OR "In exercise of the powers vested..."
+- Use numbered paragraphs: 1., 2., 2.1, 2.2 etc.
+- Language: Firm and directive. Third person throughout.
+- Closing paragraph: "This issues with the approval of {authority}."
+- Do NOT use "I" or personal pronouns.`,
+
+  "Office Memorandum": `FORMAT: Office Memorandum (OM)
+- Opening: Start with "The undersigned is directed to refer to..." OR "Attention is invited to..."
+- Use numbered paragraphs: 1., 2., 2.1 etc.
+- Language: Formal but communicative. Written as if from the office.
+- Closing paragraph: "This issues with the approval of {authority}."
+- Do NOT use "I". Use "the undersigned" if referring to the writer.`,
+
+  "Circular": `FORMAT: Circular
+- Opening: Start with "Attention of all concerned is invited to..." OR "It has been observed that..."
+- Use numbered paragraphs: 1., 2., 2.1 etc.
+- Language: Informative and guidance-oriented. Addressed to a wide audience.
+- Closing paragraph: "This circular issues with the approval of {authority}."
+- May include sub-points as (a), (b), (c) under main paragraphs.`,
+
+  "DO Letter": `FORMAT: Demi Official (DO) Letter
+- Opening: Start with "Dear [Designation]," on a new line, then begin the body.
+- Do NOT use numbered paragraphs. Write in flowing prose paragraphs.
+- Language: Semi-personal, formal but direct. Use "I".
+- Closing: End with "Yours sincerely,"
+- Do NOT include "This issues with approval of..."
+- Keep it concise — typically 2-3 paragraphs only.`,
+
+  "UO Note": `FORMAT: Unofficial Note (UO Note)
+- Opening: Start directly with the subject matter — no salutation.
+- Do NOT use numbered paragraphs. Write as a brief internal note.
+- Language: Brief, factual, and to the point. Internal communication only.
+- Do NOT include "This issues with approval of..."
+- Keep it very brief — typically 1-2 short paragraphs only.`
+};
+
+function getCustomFormats() {
+  return JSON.parse(localStorage.getItem('wr_custom_formats') || '{}');
+}
+
+function saveCustomFormats(formats) {
+  localStorage.setItem('wr_custom_formats', JSON.stringify(formats));
+}
+
+function getFormatForType(docType) {
+  const custom = getCustomFormats();
+  return custom[docType] || DEFAULT_FORMATS[docType] || '';
+}
+
+function loadFormatEditor(docType) {
+  document.getElementById('formatInstructions').value = getFormatForType(docType);
+}
+
+function saveFormat() {
+  const docType = document.getElementById('formatDocType').value;
+  const instructions = document.getElementById('formatInstructions').value.trim();
+  if (!instructions) { alert('Please enter format instructions.'); return; }
+  const formats = getCustomFormats();
+  formats[docType] = instructions;
+  saveCustomFormats(formats);
+  alert(`Format saved for "${docType}"! All future drafts will use this format.`);
+}
+
+function resetFormat() {
+  const docType = document.getElementById('formatDocType').value;
+  if (!confirm(`Reset "${docType}" format to default?`)) return;
+  const formats = getCustomFormats();
+  delete formats[docType];
+  saveCustomFormats(formats);
+  document.getElementById('formatInstructions').value = DEFAULT_FORMATS[docType] || '';
+  alert(`"${docType}" reset to default format.`);
 }
 
 /* ---- INIT ---- */
